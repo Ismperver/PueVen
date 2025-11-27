@@ -1,7 +1,7 @@
 // Imports necesarios 
 import { useEngine } from '@babylonjs/react-native';
 import { useEffect, useState } from 'react';
-import { createScene } from './src/index';
+import { createScene } from './src/modules/loadScreen.js';
 import fs from "react-native-fs";
 import { Buffer } from "buffer";
 
