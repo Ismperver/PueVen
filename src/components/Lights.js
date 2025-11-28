@@ -26,15 +26,22 @@ export function createHemisphereLight(scene) {
 
 /**
  * Configura una luz que se puede direccionar.
- * 
+ *
  * @param {Scene} scene - Escena activa
  * @returns {DirectionalLight} - Instancia de la luz.
- * 
+ *
  * @description
- * - 
+ * - Crea una luz direccional con dirección y posición definidas.
+ * - En Babylon Native es necesario definirposición y dirección.
+ * - Ideal para iluminación global, sombras o iluminación lateral.
  */
 export function createDirectionalLight(scene) {
-    const light = new DirectionalLight();
+    const direction = new Vector3(-1, -2, -1); //Vector para la rafaga de luz
+    const light = new DirectionalLight("dirtionalLight", direction, scene);
+    light.position = new Vector3(20, 40, 20); //Posición por defecto para crear sombras
+    light.intensity = 1.2; // Establecemos una intensidad
+    light.shadowMinZ = 1; // Suavizado de la luz
+    light.shadowMaxZ = 250;
     return light;
 }
 
