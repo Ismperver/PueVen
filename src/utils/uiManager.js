@@ -40,3 +40,41 @@ export function getGlobalUI(scene) {
   return globalUI;
 }
 
+/**
+ * Limpia todos los controles de la UI global sin destruirla.
+ * 
+ * Útil para eliminar paneles temporales (ej: info, menús) sin recrear la textura.
+ * 
+ * @returns {void}
+ * 
+ * @example
+ * ```js
+ * clearGlobalUI(); // Borra todo lo visible
+ * showNewPanel();  // Añade nuevo contenido
+ * ```
+ */
+export function clearGlobalUI() {
+  if (globalUI && !globalUI.isDisposed) {
+    globalUI.clear();
+  }
+}
+
+/**
+ * Elimina completamente la UI global y libera recursos.
+ * 
+ * - Llama a `dispose()` en la textura.
+ * - Establece `globalUI = null` para forzar recreación en el próximo uso.
+ * 
+ * @returns {void}
+ * 
+ * @example
+ * ```js
+ * disposeGlobalUI(); // Limpieza completa al salir de escena
+ * ```
+ */
+export function disposeGlobalUI() {
+  if (globalUI && !globalUI.isDisposed) {
+    globalUI.dispose();
+    globalUI = null;
+  }
+}
