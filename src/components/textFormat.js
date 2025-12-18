@@ -5,14 +5,15 @@
  * lugar.
  * 
  * @param {TextBlock} title - Instancia de TextBlock (Babylon GUI)
+ * @author Ismael Pérez
  * 
  * @description
- * Usa `scaleX/scaleY` en lugar de aumentar `fontSize` ya que
+ * Usa scaleX/scaleY en lugar de aumentar fontSize ya que
  * en Babylon Native existe un bug para el texto y es la única forma
  * de poder gestionar el tamaño de las fuentes, para:
  * 
  * - Evitar redibujado pesado en Babylon Native
- * - Mantener legibilidad en pantallas de alta densidad
+ * - Mantener legibilidad en pantallas
  * - Control fino sobre el tamaño percibido
  */
 export function titleText(text) {
