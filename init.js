@@ -1,7 +1,7 @@
 // Imports necesarios 
 import { useEngine } from '@babylonjs/react-native';
 import { useEffect, useState } from 'react';
-import { createScene } from './src/modules/loadScreen.js';
+import { createScene } from './src/modules/loadScreen/loadScreen.js';
 import fs from "react-native-fs";
 import { Buffer } from "buffer";
 
@@ -18,16 +18,16 @@ import { Buffer } from "buffer";
  *   - camera: cámara activa de la escena.
  */
 export const usePlaygroundScene = () => {
-  const engine = useEngine(); 
+  const engine = useEngine();
   // Función Hook que retorna la instancia del engine de Babylon Native
-  const [scene, setScene] = useState(); 
-  const [camera, setCamera] = useState(); 
+  const [scene, setScene] = useState();
+  const [camera, setCamera] = useState();
 
   /**
    * Función para cargar una fuente TTF desde los assets de Android y registrarla en Babylon Native
    */
   async function loadTTF() {
-    
+
     /**
      * Convierte una cadena Base64 en ArrayBuffer.
      * Necesario porque Babylon Native requiere ArrayBuffer para cargar fuentes TTF.
@@ -74,7 +74,7 @@ export const usePlaygroundScene = () => {
     }, 500); // Pequeño delay para asegurar que el engine y el contexto nativo están listos.
 
     return () => clearTimeout(timeout); // Limpia el timeout.
-    }, [engine]);
+  }, [engine]);
 
-  return { scene, camera }; 
+  return { scene, camera };
 };
