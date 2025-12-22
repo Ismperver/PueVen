@@ -1,5 +1,5 @@
 import { Button, Control, Rectangle, TextBlock } from "@babylonjs/gui";
-import { getGlobalUI } from "./GlobalUI.js";
+import { getGlobalUI } from "../utils/uiManager.js";
 import { bigNormalText } from "./TextFormat.js";
 
 /**

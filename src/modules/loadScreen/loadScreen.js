@@ -1,5 +1,5 @@
 import { Rectangle, Image, Control, TextBlock } from "@babylonjs/gui";
-import { getGlobalUI, clearGlobalUI } from "../../components/GlobalUI.js";
+import { getGlobalUI, clearGlobalUI } from "../../utils/uiManager.js";
 import { bigNormalText, normalText } from "../../components/textFormat.js";
 
 /**

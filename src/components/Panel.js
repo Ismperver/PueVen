@@ -1,5 +1,5 @@
 import { Rectangle, Control } from "@babylonjs/gui";
-import { getGlobalUI } from "./GlobalUI.js";
+import { getGlobalUI } from "../utils/uiManager.js";
 
 /**
  * Crea un nuevo panel rectangular para la interfaz de usuario (UI).
