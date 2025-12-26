@@ -1,10 +1,10 @@
 import { Control, StackPanel } from "@babylonjs/gui";
-import { getGlobalUI, clearGlobalUI } from "./uiManager.js";
+import { getGlobalUI, clearGlobalUI } from "../../utils/uiManager.js";
 import { createMapView, switchFloor } from "./mapView.js";
 import { createSearchBar } from "./searchBar.js";
-import { createPanel, addControlPanel } from "./panel.js";
-import { createButton } from "./button.js";
-import { normalText } from "./textFormat.js";
+import { createPanel, addControlPanel } from "../../components/panel.js";
+import { createButton } from "../../components/button.js";
+import { normalText } from "../../components/textFormat.js";
 
 /**
  * Contenedor principal de la pantalla de selección.
