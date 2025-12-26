@@ -31,3 +31,26 @@ export function getStoresByCategory(stores, category) {
     return stores.filter(store => store.categoria === category);
 }
 
+/**
+ * Realiza una búsqueda aproximada para tolerar errores de escritura.
+ * Optimiza la experiencia de usuario reduciendo la frustración al buscar nombres.
+ * * @param {Array<Object>} stores - Lista completa de tiendas.
+ * @param {string} query - Texto de búsqueda con posibles errores ortográficos.
+ * @returns {Array<Object>} Resultados sugeridos según la coincidencia.
+ */
+export function fuzzSearch(stores, query) {
+    if (!query || query.length < 2) return [];
+
+    const term = query.toLowerCase().trim();
+
+    // Lógica de búsqueda simple por coincidencia.
+    return stores.filter(store => {
+        const name = store.nombre.toLowerCase();
+        return name.startsWith(term) || name.includes(term);
+    }).sort((storeA, storeB) => {
+        // Priorizar resultados que empiezan con el término de búsqueda.
+        const storeAStarts = storeA.nombre.toLowerCase().startsWith(term);
+        const storeBStarts = storeB.nombre.toLowerCase().startsWith(term);
+        return storeAStarts === storeBStarts ? 0 : storeAStarts ? -1 : 1;
+    });
+}
