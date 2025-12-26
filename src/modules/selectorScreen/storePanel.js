@@ -15,7 +15,7 @@ let currentStorePanel = null;
  * iniciar el guiado en Realidad Aumentada.
  *
  * @param {Scene} scene - La escena de Babylon activa.
- * @param {Object} store - Objeto con los datos de la tienda (extraídos del JSON/PDF).
+ * @param {Object} store - Objeto con los datos de la tienda (extraídos del JSON).
  * @param {Function} onGoToStore - Acción a realizar al pulsar "Ir a la tienda".
  * @returns {void}
  */
@@ -33,7 +33,7 @@ export function createPanelStore(scene, store, onGoToStore) {
         verticalAlignment: Control.VERTICAL_ALIGNMENT_CENTER
     });
 
-    // 2. Nombre de la Tienda (Ej: Zara, Primark, IKEA)
+    // 2. Nombre de la Tienda
     const title = new TextBlock("storeName", store.nombre.toUpperCase());
     title.color = "#00E5FF";
     title.height = "40px";
