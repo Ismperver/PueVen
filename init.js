@@ -1,7 +1,8 @@
 // Imports necesarios 
 import { useEngine } from '@babylonjs/react-native';
 import { useEffect, useState } from 'react';
-import { createScene } from './src/modules/loadScreen/loadScreen.js';
+import { createScene, disposeLoadScreen, updateLoadStatus } from './src/modules/loadScreen/loadScreen.js';
+import { createMapView, focusMap } from './src/modules/selectorScreen/mapView.js';
 import fs from "react-native-fs";
 import { Buffer } from "buffer";
 
@@ -70,6 +71,21 @@ export const usePlaygroundScene = () => {
         const scene = createScene(engine);
         setScene(scene);
         setCamera(scene.activeCamera);
+
+        // --- INICIO DE LA LÓGICA DE TRANSICIÓN ---
+        // 1. Simulamos tiempo de carga (2 segundos) para que se vea el logo
+        setTimeout(() => {
+          updateLoadStatus("Iniciando entorno...");
+
+          // 2. Cargamos el mapa principal (Planta Baja por defecto)
+          createMapView(scene);
+
+          // 3. Destruimos la pantalla de carga
+          disposeLoadScreen();
+
+          // 4. Enfocamos la cámara al mapa
+          focusMap(scene.activeCamera);
+        }, 2000);
       });
     }, 500); // Pequeño delay para asegurar que el engine y el contexto nativo están listos.
 
