@@ -73,7 +73,7 @@ export function switchFloor(currentMap, newFloor, scene) {
  */
 export function focusMap(camera, height = 80) {
     if (camera) {
-        camera.setPosition(new Vector3(0, height, 0));
+        camera.position = new Vector3(0, height, 0);
         camera.setTarget(Vector3.Zero());
     }
 }
