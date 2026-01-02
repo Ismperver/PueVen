@@ -1,4 +1,7 @@
 import { MeshBuilder, StandardMaterial, Texture, Vector3, Color3 } from "@babylonjs/core";
+import { Image } from "react-native";
+import mapFloor0 from "../../assets/maps/pv_planta_baja.png";
+import mapFloor1 from "../../assets/maps/pv_primera_planta.png";
 
 /**
  * Crea el mapa interactivo de Puerto Venecia con soporte para varias plantas.
@@ -20,18 +23,21 @@ export function createMapView(scene, options = {}) {
     } = options;
 
     // Selección de imagen según el PDF (Galería Planta Baja o Primera Planta)
-    const mapUrl = floor === 0
-        ? "assets/maps/pv_planta_baja.png"
-        : "assets/maps/pv_primera_planta.png";
+    // Selección de imagen según el PDF (Galería Planta Baja o Primera Planta)
+    const mapAsset = floor === 0
+        ? mapFloor0
+        : mapFloor1;
+
+    const resolvedMap = Image.resolveAssetSource(mapAsset);
 
     // Crear el plano (suelo) con las proporciones de la galería
     const ground = MeshBuilder.CreateGround("groundMap", { width: sizeW, height: sizeH }, scene);
 
-    // Configurar material con estética futurista/neón
+    // Configurar material
     const mapMaterial = new StandardMaterial("mapMaterial", scene);
-    mapMaterial.diffuseTexture = new Texture(mapUrl, scene);
+    mapMaterial.diffuseTexture = new Texture(resolvedMap.uri, scene);
 
-    // Hacemos que el mapa sea auto-iluminado (estilo neón)
+    // Hacemos que el mapa sea auto-iluminado
     mapMaterial.emissiveTexture = mapMaterial.diffuseTexture;
     mapMaterial.specularColor = new Color3(0, 0, 0); // Evitar reflejos molestos
     mapMaterial.backFaceCulling = false; // Visible desde ambos lados si es necesario
