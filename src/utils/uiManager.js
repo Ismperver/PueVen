@@ -27,16 +27,21 @@ let globalUI = null;
  * ```
  */
 export function getGlobalUI(scene) {
-  if (!globalUI || globalUI.isDisposed) {
-    
+  if (globalUI) {
+    if (globalUI.isDisposed || globalUI.getScene() !== scene) {
+      globalUI.dispose();
+      globalUI = null;
+    }
+  }
+
+  if (!globalUI) {
     /**
      * Crea una UI fullscreen con soporte para escalado automático.
      * @type {import("@babylonjs/gui").AdvancedDynamicTexture}
      */
     globalUI = AdvancedDynamicTexture.CreateFullscreenUI("globalUI", true, scene);
-    
   }
-  console.log("Creada la UI global...");
+  // console.log("UI global recuperada...");
   return globalUI;
 }
 

@@ -1,6 +1,6 @@
 import { InputText, Control, StackPanel } from "@babylonjs/gui";
 import { getGlobalUI } from "../../utils/uiManager.js";
-import { normalText } from "../../components/TextFormat.js";
+import { normalText } from "../../components/textFormat.js";
 
 /**
  * Crea una barra de búsqueda interactiva y predictiva

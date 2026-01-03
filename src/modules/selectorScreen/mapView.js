@@ -16,6 +16,7 @@ import mapFloor1 from "../../assets/maps/pv_primera_planta.png";
  * @returns {Mesh} Devuelve el plano del mapa creado.
  */
 export function createMapView(scene, options = {}) {
+    console.log("carga createMapView");
     const {
         floor = 0,
         sizeW = 60,

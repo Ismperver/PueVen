@@ -2,8 +2,8 @@ import { Control, StackPanel } from "@babylonjs/gui";
 import { getGlobalUI, clearGlobalUI } from "../../utils/uiManager.js";
 import { createMapView, switchFloor } from "./mapView.js";
 import { createSearchBar } from "./searchBar.js";
-import { createPanel, addControlPanel } from "../../components/panel.js";
-import { createButton } from "../../components/button.js";
+import { createPanel, addControlPanel } from "../../components/Panel.js";
+import { createButton } from "../../components/Button.js";
 
 /**
  * Contenedor principal de la pantalla de selección.
@@ -11,6 +11,7 @@ import { createButton } from "../../components/button.js";
  * @private
  */
 let selectorContainer = null;
+let floorPanel = null; // Track floorPanel to dispose it later
 let currentMapMesh = null;
 let currentFloor = 0;
 
@@ -22,8 +23,11 @@ let currentFloor = 0;
  * @param {Scene} scene - La escena de Babylon donde se renderiza la UI.
  */
 export function initSelectorScreen(scene) {
-    const ui = getGlobalUI(scene);
+    // Limpiamos cualquier instancia previa para evitar duplicados
+    disposeSelector();
 
+    const ui = getGlobalUI(scene);
+    console.log("Pantalla de selección mostrada...");
     // 1. Crear el mapa base, planta baja por defecto
     currentMapMesh = createMapView(scene, { floor: currentFloor });
 
@@ -41,7 +45,7 @@ export function initSelectorScreen(scene) {
     selectorContainer.addControl(searchBar);
 
     // 4. Panel de cambio de planta
-    const floorPanel = createPanel(scene, {
+    floorPanel = createPanel(scene, {
         name: "floorSelector",
         width: "200px",
         height: "80px",
@@ -51,6 +55,7 @@ export function initSelectorScreen(scene) {
 
     const btnSwitch = createButton(scene, {
         text: "CAMBIAR PLANTA",
+        name: "btnSwitchFloor", // Unique name
         width: "180px",
         height: "40px",
         onClick: () => {
@@ -98,6 +103,10 @@ export function disposeSelector() {
     if (currentMapMesh) {
         currentMapMesh.dispose();
         currentMapMesh = null;
+    }
+    if (floorPanel) {
+        floorPanel.dispose();
+        floorPanel = null;
     }
     clearGlobalUI();
 }

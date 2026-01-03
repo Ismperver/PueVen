@@ -3,6 +3,8 @@ import { useEngine } from '@babylonjs/react-native';
 import { useEffect, useState } from 'react';
 import { createScene, disposeLoadScreen, updateLoadStatus } from './src/modules/loadScreen/loadScreen.js';
 import { createMapView, focusMap } from './src/modules/selectorScreen/mapView.js';
+import { initSelectorScreen } from './src/modules/selectorScreen/selectorScreen.js';
+import { createHemisphereLight } from './src/components/Lights.js';
 import fs from "react-native-fs";
 import { Buffer } from "buffer";
 
@@ -69,6 +71,7 @@ export const usePlaygroundScene = () => {
     const timeout = setTimeout(() => {
       loadTTF().then(() => {
         const scene = createScene(engine);
+        createHemisphereLight(scene);
         setScene(scene);
         setCamera(scene.activeCamera);
 
@@ -77,11 +80,11 @@ export const usePlaygroundScene = () => {
         setTimeout(() => {
           updateLoadStatus("Iniciando entorno...");
 
-          // 2. Cargamos el mapa principal (Planta Baja por defecto)
-          createMapView(scene);
-
-          // 3. Destruimos la pantalla de carga
+          // 2. Destruimos la pantalla de carga para liberar recursos
           disposeLoadScreen();
+
+          // 3. Cargamos el mapa principal y la interfaz de selección
+          initSelectorScreen(scene);
 
           // 4. Enfocamos la cámara al mapa
           focusMap(scene.activeCamera);

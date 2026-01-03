@@ -53,17 +53,17 @@ export function showLoadScreen(scene) {
     // Imagen del Logo.
     const resolvedLogo = RNImage.resolveAssetSource(logoAsset);
     const logo = new Image("logo", resolvedLogo.uri);
-    logo.width = "250px";
-    logo.height = "250px";
+    logo.width = "800px";
+    logo.height = "800px";
     logo.verticalAlignment = Control.VERTICAL_ALIGNMENT_CENTER;
-    logo.top = "50px";
+    logo.top = "0px";
     loadingContainer.addControl(logo);
 
     // Texto de Bienvenida 
     const welcomeText = new TextBlock("welcomeText", "BIENVENIDO A PUEVEN");
     welcomeText.color = "#00E5FF";
-    welcomeText.verticalAlignment = Control.VERTICAL_ALIGNMENT_CENTER;
-    welcomeText.top = "100px";
+    welcomeText.verticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
+    welcomeText.top = "150px";
 
     // Aplicación de escala estándar del texto.
     bigNormalText(welcomeText);
@@ -73,7 +73,7 @@ export function showLoadScreen(scene) {
     const statusText = new TextBlock("statusText", "CARGANDO...");
     statusText.color = "#BC00FF";
     statusText.verticalAlignment = Control.VERTICAL_ALIGNMENT_BOTTOM;
-    statusText.top = "-60px";
+    statusText.top = "-100px"; // Negative to be visible inside the screen from bottom
 
     // Aplicación de escala estándar del texto.
     normalText(statusText);
@@ -104,6 +104,7 @@ export function updateLoadStatus(message) {
  */
 export function disposeLoadScreen() {
     if (loadingContainer) {
+        loadingContainer.isVisible = false; // Force visual update
         loadingContainer.dispose();
         loadingContainer = null;
         console.log("Pantalla de carga eliminada.");

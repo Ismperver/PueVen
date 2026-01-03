@@ -34,6 +34,7 @@ export function freeCamera(scene) {
 export function universalCamera(scene) {
     const camera = new UniversalCamera("universalCamera", new Vector3(0, 10, 0), scene);
     camera.setTarget(Vector3.Zero());
+    camera.attachControl(true, true);
     return camera;
 }
 

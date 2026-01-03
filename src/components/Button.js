@@ -1,6 +1,6 @@
 import { Button, Control, Rectangle, TextBlock } from "@babylonjs/gui";
 import { getGlobalUI } from "../utils/uiManager.js";
-import { bigNormalText } from "./TextFormat.js";
+import { bigNormalText } from "./textFormat.js";
 
 /**
  * Crea un botón con estilo neón y lo añade a la UI global.
@@ -62,7 +62,7 @@ export function createButton(scene, options = {}) {
 
     ui.addControl(button);
     bigNormalText(button.textBlock);
-    this.container = button;
+
 
     return button;
 }
@@ -71,9 +71,8 @@ export function createButton(scene, options = {}) {
 /**
  * Elimina el botón específico de la UI.
  */
-export function disposeButton() {
-    if (this.container) {
-        this.container.dispose();
-        this.container = null;
+export function disposeButton(button) {
+    if (button) {
+        button.dispose();
     }
 }
