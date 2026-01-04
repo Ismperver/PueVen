@@ -4,9 +4,9 @@ Bienvenido a la documentación técnica del proyecto Pueven Navigator.
 
 ## Secciones
 
-- [Arquitectura](./arquitectura) - Visión general de la arquitectura del proyecto.
-- [Guía de Uso](./guia-de-uso) - Cómo utilizar la aplicación.
-- [API Reference](./api/README) - Documentación generada automáticamente del código fuente.
+- [Arquitectura](./arquitectura/index.md) - Visión general de la arquitectura del proyecto.
+- [Guía de Uso](./guia-de-uso/index.md) - Cómo utilizar la aplicación.
+- [API Reference](./api/README.md) - Documentación generada automáticamente del código fuente.
 
 ## Introducción
 
