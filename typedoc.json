@@ -1,0 +1,12 @@
+{
+    "entryPoints": [
+        "src"
+    ],
+    "out": "docs/api",
+    "plugin": [
+        "typedoc-plugin-markdown"
+    ],
+    "entryPointStrategy": "expand",
+    "hideBreadcrumbs": true,
+    "skipErrorChecking": true
+}
