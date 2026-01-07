@@ -4,7 +4,7 @@ import { getGlobalUI, clearGlobalUI } from "../../utils/uiManager.js";
 import { bigNormalText, normalText } from "../../components/textFormat.js";
 import logoAsset from "../../assets/Pueven_logo.png";
 import { Image as RNImage } from "react-native";
-import { universalCamera } from "../../components/Camera.js";
+import { createMapCamera } from "../../components/Camera.js";
 /**
  * Variable local para guardar el contenedor de la pantalla de carga.
  * @type {Rectangle|null}
@@ -23,8 +23,10 @@ let loadingContainer = null;
 export function createScene(engine) {
     const scene = new Scene(engine);
 
-    const camera = universalCamera(scene);
-    camera.position.z = -5;
+    // FIX: Usamos la cámara optimizada para Mapas (ArcRotate)
+    // Esto habilita zoom rápido, panning suave y mejor control táctil.
+    const camera = createMapCamera(scene);
+
     // Ejecuta la pantalla de carga
     showLoadScreen(scene);
 

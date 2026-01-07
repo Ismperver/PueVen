@@ -27,6 +27,46 @@ export function freeCamera(scene) {
 }
 
 /**
+ * Cámara optimizada para mapa.
+ * Ideal para control táctil.
+ * 
+ * @param {import("@babylonjs/core").Scene} scene 
+ * @returns {ArcRotateCamera}
+ */
+export function createMapCamera(scene) {
+    const camera = new ArcRotateCamera("mapCamera", -Math.PI / 2, 0, 80, Vector3.Zero(), scene);
+
+    // Configuración de sensibilidad cuanto menor valor será más rápido.
+
+    // Zoom
+    camera.pinchPrecision = 6;
+    camera.wheelPrecision = 20;
+
+    // Movimiento
+    camera.panningSensibility = 500;
+
+    // Rotación
+    camera.angularSensibilityX = 800;
+    camera.angularSensibilityY = 800;
+
+    // Límites
+    camera.lowerBetaLimit = 0;
+    camera.upperBetaLimit = Math.PI / 3;
+
+    // Límites de Zoom
+    camera.lowerRadiusLimit = 20;
+    camera.upperRadiusLimit = 150;
+
+    // Inercia (Suavidad)
+    camera.inertia = 0.9;
+
+    // Para asegurar con 2 dedos en Touch:
+    camera.panningSensibility = 250;
+    camera.attachControl(true, true);
+    return camera;
+}
+
+/**
  * Cámara para el manejo de la interfaz y navegación.
  * * @param {import("@babylonjs/core").Scene} scene 
  * @returns {UniversalCamera}
