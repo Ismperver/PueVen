@@ -28,13 +28,14 @@ export function createSearchBar(scene, options = {}) {
     input.height = "50px";
     input.text = "";
     input.placeholderText = placeholder;
-    input.placeholderColor = "rgba(188, 0, 255, 0.6)";
+    input.placeholderColor = "#BC00FF";
     input.color = "#00E5FF";
-    input.background = "rgba(45, 0, 75, 0.5)";
-    input.focusedBackground = "rgba(45, 0, 75, 0.8)";
+    input.background = "#2D004B";
+    input.focusedBackground = "#2D004B";
     input.thickness = 2;
     input.focusedThickness = 3;
     input.borderColor = "#BC00FF";
+    input.fontFamily = "Arial";
 
     // Alineación superior
     input.verticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
@@ -55,8 +56,6 @@ export function createSearchBar(scene, options = {}) {
     input.onBlurObservable.add(() => {
         console.log("Búsqueda finalizada: " + input.text);
     });
-
-    ui.addControl(input);
     return input;
 }
 

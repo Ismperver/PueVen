@@ -22,49 +22,59 @@ export function createButton(scene, options = {}) {
 
     const ui = getGlobalUI(scene);
 
-    // Contenedor principal.
-    const button = Button.CreateSimpleButton(name, text);
-    button.width = width;
-    button.height = height;
-    button.color = "#00E5FF";
-    button.fontSize = 20;
-    button.fontFamily = "Segoe UI, Arial, sans-serif";
-    button.fontWeight = "bold";
+    // FIX: Usamos Rectangle en lugar de Button para evitar el freeze de Babylon Native
+    // Los controles complejos como Button o InputText parecen causar bloqueos al iniciarse.
+    const buttonContainer = new Rectangle(name);
+    buttonContainer.width = width;
+    buttonContainer.height = height;
+    buttonContainer.thickness = 2;
+    // buttonContainer.cornerRadius = 5; // KEEP DISABLED (Safety First)
+    buttonContainer.color = "#00E5FF";
+    buttonContainer.background = "#2D004B"; // FIX: Solid Color (No Transparency) prevents freeze
+    buttonContainer.isPointerBlocker = true;
 
-    // Estilo de fondo y borde (Morado neón)
-    button.background = "rgba(45, 0, 75, 0.8)";
-    button.thickness = 2;
-    button.cornerRadius = 5;
-    button.hoverCursor = "pointer";
+    // Efecto visual manual
+    buttonContainer.metadata = {
+        defaultColor: "#00E5FF",
+        defaultBg: "#2D004B", // Solid
+        hoverColor: "#FFFFFF",
+        hoverBg: "#BC00FF"    // Solid
+    };
 
-    // Efecto de iluminación en los bordes
-    button.outlineWidth = 2;
-    button.outlineColor = "#BC00FF";
+    // Texto del botón
+    const textBlock = new TextBlock(name + "_text", text);
+    textBlock.color = "#00E5FF";
+    textBlock.fontSize = 18; // FIX: Reasonable size
+    textBlock.fontFamily = "Arial";
+    textBlock.fontWeight = "bold";
+    // Centrado por defecto
+    buttonContainer.addControl(textBlock);
 
-    // --- Observables y eventos ---
+    // --- Observables y eventos Manuales ---
 
     // Al pasar el mouse (Hover)
-    button.onPointerEnterObservable.add(() => {
-        button.background = "#BC00FF";
-        button.color = "#FFFFFF";
+    buttonContainer.onPointerEnterObservable.add(() => {
+        buttonContainer.background = buttonContainer.metadata.hoverBg;
+        textBlock.color = buttonContainer.metadata.hoverColor;
     });
 
     // Al salir del mouse
-    button.onPointerOutObservable.add(() => {
-        button.background = "rgba(45, 0, 75, 0.8)";
-        button.color = "#00E5FF";
+    buttonContainer.onPointerOutObservable.add(() => {
+        buttonContainer.background = buttonContainer.metadata.defaultBg;
+        textBlock.color = buttonContainer.metadata.defaultColor;
     });
 
     // Evento Click
     if (onClick) {
-        button.onPointerUpObservable.add(onClick);
+        buttonContainer.onPointerUpObservable.add(onClick);
     }
 
-    ui.addControl(button);
-    bigNormalText(button.textBlock);
+    // Aplicar escalado de texto si es necesario (helper externo)
+    // bigNormalText(textBlock); // REMOVED: Too big
 
 
-    return button;
+    // Importante: Devolver el contenedor que actúa como botón
+    return buttonContainer;
 }
 
 

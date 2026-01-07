@@ -4,7 +4,47 @@ import mapFloor0 from "../../assets/maps/pv_planta_baja.png";
 import mapFloor1 from "../../assets/maps/pv_primera_planta.png";
 
 /**
- * Crea el mapa interactivo de Puerto Venecia con soporte para varias plantas.
+ * Realiza la precarga de los recursos de los mapas (texturas) de forma asíncrona.
+ * Retorna una promesa que se resuelve cuando las texturas están listas.
+ * @param {Scene} scene - La escena de Babylon donde se colocará el mapa.
+ * @returns {Promise<void>} Una promesa que se resuelve cuando las texturas están listas.
+ */
+export function loadMapAssets(scene) {
+    return new Promise((resolve, reject) => {
+        console.log("Iniciando carga asíncrona de mapas...");
+
+        const assets = [mapFloor0, mapFloor1];
+        let loadedCount = 0;
+
+        if (assets.length === 0) {
+            resolve();
+            return;
+        }
+
+        assets.forEach(asset => {
+            const resolved = Image.resolveAssetSource(asset);
+            const texture = new Texture(resolved.uri, scene, {
+                onLoad: () => {
+                    loadedCount++;
+                    console.log(`Textura cargada: ${loadedCount}/${assets.length}`);
+                    if (loadedCount === assets.length) {
+                        console.log("Todas las texturas de mapas cargadas.");
+                        resolve();
+                    }
+                },
+                onError: (msg, exception) => {
+                    console.error("Error cargando textura de mapa:", msg, exception);
+                    // Por robustez, contamos como 'loaded' o reject.
+                    // Vamos a reject para que se note el fallo.
+                    reject(new Error("Fallo en carga de mapas"));
+                }
+            });
+        });
+    });
+}
+
+/**
+ * Crea el mapa interactivo de Puerto Venicia con soporte para varias plantas.
  * * Configura el plano del suelo con la textura correspondiente a la planta seleccionada
  * y aplica un estilo visual neón coherente con el resto de la aplicación.
  *

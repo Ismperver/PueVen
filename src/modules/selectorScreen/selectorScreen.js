@@ -1,4 +1,4 @@
-import { Control, StackPanel } from "@babylonjs/gui";
+import { Control, Rectangle, TextBlock } from "@babylonjs/gui";
 import { getGlobalUI, clearGlobalUI } from "../../utils/uiManager.js";
 import { createMapView, switchFloor } from "./mapView.js";
 import { createSearchBar } from "./searchBar.js";
@@ -11,13 +11,14 @@ import { createButton } from "../../components/Button.js";
  * @private
  */
 let selectorContainer = null;
-let floorPanel = null; // Track floorPanel to dispose it later
+// Variables para el mapa y el panel de plantas
+let floorPanel = null;
 let currentMapMesh = null;
 let currentFloor = 0;
 
 /**
  * Inicializa y muestra la pantalla de selección de tiendas.
- * * Configura el buscador superior, el mapa interactivo central y los 
+ * Configura el buscador superior, el mapa interactivo central y los 
  * controles para cambiar entre la planta baja y la primera planta.
  *
  * @param {Scene} scene - La escena de Babylon donde se renderiza la UI.
@@ -28,43 +29,66 @@ export function initSelectorScreen(scene) {
 
     const ui = getGlobalUI(scene);
     console.log("Pantalla de selección mostrada...");
-    // 1. Crear el mapa base, planta baja por defecto
+
+    // Crear el mapa base, planta baja por defecto.
     currentMapMesh = createMapView(scene, { floor: currentFloor });
 
-    // 2. Contenedor principal para organizar los elementos
-    selectorContainer = new StackPanel("selectorContainer");
+    // Contenedor principal 
+    selectorContainer = new Rectangle("selectorContainer");
     selectorContainer.width = "100%";
     selectorContainer.height = "100%";
+    selectorContainer.thickness = 0;
     ui.addControl(selectorContainer);
 
-    // 3. Añadir Barra de Búsqueda (Parte Superior)
+    // Añadir la Barra de Búsqueda.
     const searchBar = createSearchBar(scene, {
         placeholder: "BUSCAR TIENDA...",
         onSearch: (text) => console.log("Buscando:", text)
     });
+    searchBar.verticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
+    searchBar.top = "50px";
     selectorContainer.addControl(searchBar);
 
-    // 4. Panel de cambio de planta
-    floorPanel = createPanel(scene, {
-        name: "floorSelector",
-        width: "200px",
-        height: "80px",
-        verticalAlignment: Control.VERTICAL_ALIGNMENT_TOP
-    });
-    floorPanel.top = "100px";
-
-    const btnSwitch = createButton(scene, {
-        text: "CAMBIAR PLANTA",
-        name: "btnSwitchFloor", // Unique name
-        width: "180px",
+    // Botones de cambio de planta.
+    // Botón Planta Baja
+    const btnFloor0 = createButton(scene, {
+        text: "PLANTA BAJA",
+        name: "btnFloor0",
+        width: "130px",
         height: "40px",
         onClick: () => {
-            currentFloor = currentFloor === 0 ? 1 : 0;
-            currentMapMesh = switchFloor(currentMapMesh, currentFloor, scene);
+            if (currentFloor !== 0) {
+                currentFloor = 0;
+                currentMapMesh = switchFloor(currentMapMesh, currentFloor, scene);
+            }
         }
     });
+    // Posicionamiento botón planta baja.
+    btnFloor0.verticalAlignment = Control.VERTICAL_ALIGNMENT_BOTTOM;
+    btnFloor0.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_CENTER;
+    btnFloor0.left = "-80px";
+    btnFloor0.top = "-50px";
+    selectorContainer.addControl(btnFloor0);
 
-    addControlPanel(floorPanel, btnSwitch);
+    // Botón Primera Planta.
+    const btnFloor1 = createButton(scene, {
+        text: "PRIMERA PLANTA",
+        name: "btnFloor1",
+        width: "130px",
+        height: "40px",
+        onClick: () => {
+            if (currentFloor !== 1) {
+                currentFloor = 1;
+                currentMapMesh = switchFloor(currentMapMesh, currentFloor, scene);
+            }
+        }
+    });
+    // Posicionamiento boton primera planta.
+    btnFloor1.verticalAlignment = Control.VERTICAL_ALIGNMENT_BOTTOM;
+    btnFloor1.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_CENTER;
+    btnFloor1.left = "80px";
+    btnFloor1.top = "-50px";
+    selectorContainer.addControl(btnFloor1);
 }
 
 /**

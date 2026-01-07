@@ -2,11 +2,13 @@
 import { useEngine } from '@babylonjs/react-native';
 import { useEffect, useState } from 'react';
 import { createScene, disposeLoadScreen, updateLoadStatus } from './src/modules/loadScreen/loadScreen.js';
-import { createMapView, focusMap } from './src/modules/selectorScreen/mapView.js';
+import { createMapView, focusMap, loadMapAssets } from './src/modules/selectorScreen/mapView.js';
 import { initSelectorScreen } from './src/modules/selectorScreen/selectorScreen.js';
 import { createHemisphereLight } from './src/components/Lights.js';
+import { clearGlobalUI } from './src/utils/uiManager.js';
 import fs from "react-native-fs";
 import { Buffer } from "buffer";
+
 
 /**
  * Custom hook para crear y manejar una escena de Babylon Native en React Native.
@@ -76,19 +78,35 @@ export const usePlaygroundScene = () => {
         setCamera(scene.activeCamera);
 
         // --- INICIO DE LA LÓGICA DE TRANSICIÓN ---
-        // 1. Simulamos tiempo de carga (2 segundos) para que se vea el logo
-        setTimeout(() => {
+        // Iniciamos la carga asíncrona de recursos (mapas)
+        updateLoadStatus("Cargando mapas...");
+
+        loadMapAssets(scene).then(() => {
           updateLoadStatus("Iniciando entorno...");
+          console.log("Assets loaded. Waiting for transition...");
 
-          // 2. Destruimos la pantalla de carga para liberar recursos
-          disposeLoadScreen();
+          // Pequeña pausa para transición suave y asegurar que el render loop está libre
+          setTimeout(() => {
+            console.log("Ejecutando transición de escenas...");
+            // 2. Destruimos la pantalla de carga para liberar recursos
+            // Usamos clearGlobalUI para borrar todo control visual de la pantalla (limpieza total)
+            disposeLoadScreen();
+            clearGlobalUI();
 
-          // 3. Cargamos el mapa principal y la interfaz de selección
-          initSelectorScreen(scene);
-
-          // 4. Enfocamos la cámara al mapa
-          focusMap(scene.activeCamera);
-        }, 2000);
+            // 3. Cargamos el mapa principal y la interfaz de selección
+            try {
+              initSelectorScreen(scene);
+              console.log("initSelectorScreen completado.");
+              // 4. Enfocamos la cámara al mapa
+              focusMap(scene.activeCamera);
+            } catch (e) {
+              console.error("Error en initSelectorScreen:", e);
+            }
+          }, 1000);
+        }).catch(err => {
+          console.error("Error crítico cargando mapas:", err);
+          updateLoadStatus("Error Carga");
+        });
       });
     }, 500); // Pequeño delay para asegurar que el engine y el contexto nativo están listos.
 

@@ -2,10 +2,10 @@ import { Rectangle, Control } from "@babylonjs/gui";
 import { getGlobalUI } from "../utils/uiManager.js";
 
 /**
- * Crea un nuevo panel rectangular para la interfaz de usuario (UI).
+ * Crea un nuevo panel rectangular para la interfaz de usuario.
  * 
  * Esta función se encarga de configurar todos los estilos básicos (color, tamaño, bordes)
- * y añadirlo automáticamente a la pantalla principal del juego.
+ * y añadirlo automáticamente a la pantalla principal de la escena.
  *
  * @param {Scene} scene - La escena del juego donde se dibujará el panel.
  * @param {Object} options - Opciones para personalizar el panel (ancho, alto, nombre...).
@@ -40,14 +40,11 @@ export function createPanel(scene, options = {}) {
     panel.verticalAlignment = verticalAlignment;
     panel.top = "-20px";
 
-    // Añadir el panel a la pantalla.
-    ui.addControl(panel);
     return panel;
 }
 
 /**
  * Añade un elemento (como un botón, texto o imagen) dentro de un panel existente.
- * Piensa en el panel como una "caja" y en el control como el objeto que guardas dentro.
  *
  * @param {Rectangle} panel - El panel donde quieres meter el elemento.
  * @param {Control} control - El elemento visual que quieres añadir.

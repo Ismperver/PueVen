@@ -40,8 +40,9 @@ export function getGlobalUI(scene) {
      * @type {import("@babylonjs/gui").AdvancedDynamicTexture}
      */
     globalUI = AdvancedDynamicTexture.CreateFullscreenUI("globalUI", true, scene);
+    // Optimización vital para móviles: renderiza a resolución lógica.
+    globalUI.renderAtIdealSize = true;
   }
-  // console.log("UI global recuperada...");
   return globalUI;
 }
 

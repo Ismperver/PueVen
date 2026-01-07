@@ -42,6 +42,12 @@ export function createScene(engine) {
 export function showLoadScreen(scene) {
     const ui = getGlobalUI(scene);
 
+    // Asegurar limpieza de cualquier instancia previa para evitar superposiciones.
+    if (loadingContainer) {
+        disposeLoadScreen();
+    }
+
+
     // Contenedor principal que ocupa toda la pantalla
     loadingContainer = new Rectangle("loadingContainer");
     loadingContainer.width = "100%";
@@ -50,36 +56,49 @@ export function showLoadScreen(scene) {
     loadingContainer.background = "#0A0A0A";
     ui.addControl(loadingContainer);
 
-    // Imagen del Logo.
+    // Panel Central del Logo
+    // Usamos un panel contenedor para el logo para poder escalarlo eficientemente
+    // sin afectar a la calidad de la imagen o causar redibujados.
+    const logoPanel = new Rectangle("logoPanel");
+    logoPanel.width = "400px";
+    logoPanel.height = "400px";
+    logoPanel.thickness = 0;
+    logoPanel.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_CENTER;
+    logoPanel.verticalAlignment = Control.VERTICAL_ALIGNMENT_CENTER;
+    // Iniciamos con escala 0 para animar o simplemente mantener el control
+    logoPanel.scaleX = 0.8;
+    logoPanel.scaleY = 0.8;
+    loadingContainer.addControl(logoPanel);
+
+    // Imagen del Logo
     const resolvedLogo = RNImage.resolveAssetSource(logoAsset);
     const logo = new Image("logo", resolvedLogo.uri);
-    logo.width = "800px";
-    logo.height = "800px";
-    logo.verticalAlignment = Control.VERTICAL_ALIGNMENT_CENTER;
-    logo.top = "0px";
-    loadingContainer.addControl(logo);
+    logo.width = "100%";
+    logo.height = "100%";
+    logoPanel.addControl(logo);
 
-    // Texto de Bienvenida 
+    // Texto de Bienvenida
     const welcomeText = new TextBlock("welcomeText", "BIENVENIDO A PUEVEN");
     welcomeText.color = "#00E5FF";
+    welcomeText.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_CENTER;
     welcomeText.verticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
-    welcomeText.top = "150px";
+    welcomeText.top = "15%";
 
     // Aplicación de escala estándar del texto.
     bigNormalText(welcomeText);
     loadingContainer.addControl(welcomeText);
 
-    // Texto de estado "Cargando..."
+    // Texto de estado.
     const statusText = new TextBlock("statusText", "CARGANDO...");
     statusText.color = "#BC00FF";
     statusText.verticalAlignment = Control.VERTICAL_ALIGNMENT_BOTTOM;
-    statusText.top = "-100px"; // Negative to be visible inside the screen from bottom
+    statusText.top = "-15%";
 
     // Aplicación de escala estándar del texto.
     normalText(statusText);
     loadingContainer.addControl(statusText);
 
-    console.log("Pantalla de carga mostrada...");
+    console.log("Pantalla de carga refactorizada mostrada...");
 }
 
 /**
@@ -104,7 +123,7 @@ export function updateLoadStatus(message) {
  */
 export function disposeLoadScreen() {
     if (loadingContainer) {
-        loadingContainer.isVisible = false; // Force visual update
+        loadingContainer.isVisible = false;
         loadingContainer.dispose();
         loadingContainer = null;
         console.log("Pantalla de carga eliminada.");
