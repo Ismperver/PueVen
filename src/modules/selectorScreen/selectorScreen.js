@@ -1,218 +1,133 @@
-import { Control, Rectangle, TextBlock, StackPanel } from "@babylonjs/gui";
-import { getGlobalUI, clearGlobalUI } from "../../utils/uiManager.js";
-import { createMapView, switchFloor, getCoordinates } from "./mapView.js";
-import { createSearchBar } from "./searchBar.js";
-import { createPanel, addControlPanel } from "../../components/Panel.js";
-import { createButton } from "../../components/Button.js";
-import { createPanelStore } from "./storePanel.js";
+import { clearGlobalUI } from "../../utils/uiManager.js";
+import { createMapView, getCoordinates } from "./mapView.js";
 import { createTarget, disposeTarget } from "../../components/target.js";
 import tiendasData from "../../assets/dataSet/tiendas.json";
+// IMPORTANTE: Importamos Vector3 y Color3 para evitar el ReferenceError en dispositivos móviles (Hermes)
+import { Vector3, Color3 } from "@babylonjs/core";
 
-
-/**
- * Contenedor principal de la pantalla de selección.
- * @type {StackPanel|null}
- * @private
+/** * Referencia al mesh actual del mapa.
+ * @type {import("@babylonjs/core").Mesh|null} 
  */
-let selectorContainer = null;
-let floorPanel = null;
 let currentMapMesh = null;
-let currentFloor = 0;
-let currentTarget = null;
-let resultsPanel = null;
+
+/** * Almacén de marcadores activos para su posterior limpieza y gestión de memoria.
+ * @type {import("@babylonjs/core").Mesh[]} 
+ */
+let storeTargets = [];
 
 /**
- * Inicializa y muestra la pantalla de selección de tiendas.
- * Configura el buscador superior, el mapa interactivo central y los 
- * controles para cambiar entre la planta baja y la primera planta.
- *
- * @param {Scene} scene - La escena de Babylon donde se renderiza la UI.
+ * Renderiza exclusivamente los marcadores de la planta seleccionada.
+ * Esta función limpia los pines anteriores y dibuja solo los correspondientes al nivel actual.
+ * * @param {import("@babylonjs/core").Scene} scene - La escena activa de Babylon.
+ * @param {number} floor - Planta actual a renderizar (0 para Planta Baja, 1 para Primera).
+ * @param {Function} onStoreSelected - Callback ejecutado al pulsar una tienda.
  */
-export function initSelectorScreen(scene) {
-    // Limpiamos cualquier instancia previa para evitar duplicados
+export function renderStoreTargets(scene, floor, onStoreSelected) {
+    // 1. Limpieza exhaustiva de marcadores existentes del nivel anterior
+    storeTargets.forEach(target => disposeTarget(target));
+    storeTargets = [];
+
+    // 2. Filtrado de tiendas según la planta activa del repositorio JSON
+    const tiendasNivel = tiendasData.tiendas.filter(t => t.planta === floor);
+
+    tiendasNivel.forEach(store => {
+        const pos = getCoordinates(store.coordenadas, floor);
+        // Ajustamos la altura del marcador sobre el plano del mapa
+        pos.y = 0.5;
+
+        const target = createTarget(scene, {
+            position: pos,
+            name: `target_${store.id}`,
+            color: floor === 0 ? "#00E5FF" : "#BC00FF"
+        });
+
+        // Configuración de interactividad para el sistema de picking
+        target.isPickable = true;
+        target.metadata = { storeData: store };
+        storeTargets.push(target);
+    });
+}
+
+/**
+ * Inicializa la pantalla de selección, crea el mapa base e instancia los marcadores del nivel inicial.
+ * Además, configura el gestor de eventos de puntero para detectar interacciones en 3D.
+ * * @param {import("@babylonjs/core").Scene} scene - La escena activa de Babylon.
+ * @param {Function} onStoreSelected - Callback de React para manejar la selección de tienda.
+ */
+export function initSelectorScreen(scene, onStoreSelected) {
     disposeSelector();
 
-    const ui = getGlobalUI(scene);
-    console.log("Pantalla de selección mostrada...");
+    // Crear el mapa de la planta baja (0) por defecto
+    currentMapMesh = createMapView(scene, 0);
 
-    // Crear el mapa base, planta baja por defecto.
-    currentMapMesh = createMapView(scene, { floor: currentFloor });
+    // Dibujar los marcadores iniciales
+    renderStoreTargets(scene, 0, onStoreSelected);
 
-    // Contenedor principal 
-    selectorContainer = new Rectangle("selectorContainer");
-    selectorContainer.width = "100%";
-    selectorContainer.height = "100%";
-    selectorContainer.thickness = 0;
-    ui.addControl(selectorContainer);
-
-    // Añadir la Barra de Búsqueda.
-    const searchBar = createSearchBar(scene, {
-        placeholder: "BUSCAR TIENDA...",
-        onSearch: (text) => {
-            const results = tiendasData.tiendas.filter(t =>
-                t.nombre.toLowerCase().includes(text.toLowerCase())
-            );
-            showResultsSearch(scene, results);
-        }
-    });
-    searchBar.verticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
-    searchBar.top = "50px";
-    selectorContainer.addControl(searchBar);
-
-    // Botones de cambio de planta.
-    // Botón Planta Baja
-    const btnFloor0 = createButton(scene, {
-        text: "PLANTA BAJA",
-        name: "btnFloor0",
-        width: "250px",
-        height: "80px",
-        onClick: () => {
-            if (currentFloor !== 0) {
-                currentFloor = 0;
-                currentMapMesh = switchFloor(currentMapMesh, currentFloor, scene);
+    // Gestor de eventos de puntero global para detectar taps en los targets 3D
+    scene.onPointerObservable.add((pointerInfo) => {
+        // Tipo 4 corresponde al evento de presionar (PointerDown)
+        if (pointerInfo.type === 4 && pointerInfo.pickInfo.hit) {
+            const pickedMesh = pointerInfo.pickInfo.pickedMesh;
+            // Verificamos si el objeto pulsado es un marcador con datos asociados
+            if (pickedMesh && pickedMesh.metadata && pickedMesh.metadata.storeData) {
+                onStoreSelected(pickedMesh.metadata.storeData);
             }
         }
     });
-    // Posicionamiento botón planta baja.
-    btnFloor0.verticalAlignment = Control.VERTICAL_ALIGNMENT_BOTTOM;
-    btnFloor0.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
-    btnFloor0.left = "80px";
-    btnFloor0.top = "-50px";
-    selectorContainer.addControl(btnFloor0);
 
-    // Botón Primera Planta.
-    const btnFloor1 = createButton(scene, {
-        text: "PRIMERA PLANTA",
-        name: "btnFloor1",
-        width: "250px",
-        height: "80px",
-        onClick: () => {
-            if (currentFloor !== 1) {
-                currentFloor = 1;
-                currentMapMesh = switchFloor(currentMapMesh, currentFloor, scene);
+    console.log("Selector con marcadores dinámicos inicializado.");
+}
+
+/**
+ * Enfoca la cámara en una tienda específica y aplica un efecto visual de resaltado neón.
+ * * @param {import("@babylonjs/core").Scene} scene - La escena activa.
+ * @param {Object} store - Datos de la tienda seleccionada desde la UI de React.
+ */
+export function focusStore(scene, store) {
+    if (!scene || !store || !scene.activeCamera) return;
+
+    const pos = getCoordinates(store.coordenadas, store.planta);
+    const targetPosition = new Vector3(pos.x, 0, pos.z);
+    const camera = scene.activeCamera;
+
+    // Centramos la cámara sobre la tienda seleccionada
+    camera.setTarget(targetPosition);
+
+    // Ajustamos el zoom para una vista de detalle
+    if (camera.radius) {
+        camera.radius = 45;
+    }
+
+    // Buscamos el mesh del marcador para aplicar un efecto de "flash"
+    const targetMesh = scene.getMeshByName(`target_${store.id}`);
+
+    if (targetMesh && targetMesh.material) {
+        // Efecto visual: Cambio temporal de color a blanco intenso
+        const originalColor = targetMesh.material.emissiveColor.clone();
+        targetMesh.material.emissiveColor = Color3.White();
+
+        setTimeout(() => {
+            if (targetMesh && targetMesh.material) {
+                targetMesh.material.emissiveColor = originalColor;
             }
-        }
-    });
-    // Posicionamiento boton primera planta.
-    btnFloor1.verticalAlignment = Control.VERTICAL_ALIGNMENT_BOTTOM;
-    btnFloor1.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_RIGHT;
-    btnFloor1.left = "-80px";
-    btnFloor1.top = "-50px";
-    selectorContainer.addControl(btnFloor1);
+        }, 500);
+    }
+
+    console.log(`Cámara enfocada en: ${store.nombre} (Planta ${store.planta})`);
 }
 
 /**
- * Muestra los resultados de una búsqueda en un panel flotante.
- * @param {Scene} scene - La escena activa.
- * @param {Array} results - Lista de tiendas encontradas.
- */
-export function showResultsSearch(scene, results) {
-    if (resultsPanel) {
-        resultsPanel.dispose();
-    }
-
-    if (!results || results.length === 0) return;
-
-    // Crear panel contenedor de resultados
-    resultsPanel = createPanel(scene, {
-        name: "resultsPanel",
-        width: "300px",
-        height: `${Math.min(results.length * 60, 300)}px`, // Altura dinámica
-        verticalAlignment: Control.VERTICAL_ALIGNMENT_TOP
-    });
-    resultsPanel.top = "80px";
-    resultsPanel.background = "#2D004B"; // Fondo más sólido (antes rgba)
-
-    selectorContainer.addControl(resultsPanel);
-
-    // StackPanel para alinear los botones verticalmente
-    const stack = new StackPanel();
-    stack.width = "100%";
-    resultsPanel.addControl(stack);
-
-    // Mostrar máximo 5 resultados
-    results.slice(0, 5).forEach(store => {
-        const btn = createButton(scene, {
-            text: store.nombre,
-            width: "280px",
-            height: "50px",
-            onClick: () => openStorePanel(scene, store)
-        });
-        btn.paddingBottom = "10px";
-        stack.addControl(btn);
-    });
-}
-
-/**
- * Abre el panel detallado de una tienda específica y coloca el marcador.
- * @param {Scene} scene - La escena activa.
- * @param {Object} store - Datos de la tienda seleccionada.
- */
-export function openStorePanel(scene, store) {
-    // 1. Gestionar cambio de planta si es necesario
-    if (store.planta !== currentFloor) {
-        currentFloor = store.planta;
-        currentMapMesh = switchFloor(currentMapMesh, currentFloor, scene);
-    }
-
-    // 2. Colocar marcador (Target)
-    if (currentTarget) {
-        disposeTarget(currentTarget);
-    }
-    const pos = getCoordinates(store.coordenadas);
-    // Ajustar altura según planta
-    pos.y = currentFloor * 0.5 + 0.1;
-
-    currentTarget = createTarget(scene, {
-        position: pos,
-        name: `target_${store.nombre}`
-    });
-
-    // 3. Abrir Panel de Información
-    createPanelStore(scene, store, (s) => {
-        console.log("Navegando a:", s.nombre);
-        // Aquí iría la lógica de cerrar selector e iniciar AR
-    });
-
-    // Limpiar resultados de búsqueda
-    if (resultsPanel) {
-        resultsPanel.dispose();
-        resultsPanel = null;
-    }
-}
-
-/**
- * * Detiene la vista de mapa y activa los módulos de cámara AR.
- */
-export function startARSession() {
-    //implementación más tarde.
-}
-
-/**
- * Limpia todos los elementos de la pantalla de selección de la memoria.
- * * Es fundamental para cumplir con los requisitos de rendimiento y 
- * evitar solapamientos al entrar en modo AR.
+ * Libera de la memoria el mapa, los marcadores y limpia los elementos de la interfaz.
+ * Es fundamental para evitar fugas de memoria y asegurar un rendimiento óptimo en móviles.
  */
 export function disposeSelector() {
-    if (selectorContainer) {
-        selectorContainer.dispose();
-        selectorContainer = null;
-    }
     if (currentMapMesh) {
         currentMapMesh.dispose();
         currentMapMesh = null;
     }
-    if (currentTarget) {
-        disposeTarget(currentTarget);
-        currentTarget = null;
-    }
-    if (resultsPanel) {
-        resultsPanel.dispose();
-        resultsPanel = null;
-    }
-    if (floorPanel) {
-        floorPanel.dispose();
-        floorPanel = null;
-    }
+    // Eliminación segura de todos los marcadores 3D activos
+    storeTargets.forEach(target => disposeTarget(target));
+    storeTargets = [];
+
     clearGlobalUI();
 }

@@ -1,86 +1,38 @@
-import { Button, Control, Rectangle, TextBlock } from "@babylonjs/gui";
-import { getGlobalUI } from "../utils/uiManager.js";
-import { normalText } from "./textFormat.js";
+import React from 'react';
+import { TouchableOpacity, Text, StyleSheet } from 'react-native';
 
 /**
- * Crea un botón con estilo neón y lo añade a la UI global.
- * @param {Object} options - Configuración del botón.
- * @param {string} options.text - Texto del botón.
- * @param {string} [options.name="neonBtn"] - Nombre interno del control.
- * @param {string} [options.width="200px"] - Ancho del botón.
- * @param {string} [options.height="60px"] - Alto del botón.
- * @param {Function} [options.onClick] - Callback al hacer click.
+ * Botón genérico con estilo neón para la interfaz de React Native.
  */
-export function createButton(scene, options = {}) {
-    const {
-        text = "CLICK",
-        name = "neonBtn",
-        width = "200px",
-        height = "60px",
-        onClick = null
-    } = options;
+export const NeonButton = ({ text, onPress, active = false }) => {
+    return (
+        <TouchableOpacity
+            style={[styles.btn, active && styles.activeBtn]}
+            onPress={onPress}
+        >
+            <Text style={styles.btnText}>{text}</Text>
+        </TouchableOpacity>
+    );
+};
 
-    const ui = getGlobalUI(scene);
-
-    // FIX: Usamos Rectangle en lugar de Button para evitar el freeze de Babylon Native
-    // Los controles complejos como Button o InputText parecen causar bloqueos al iniciarse.
-    const buttonContainer = new Rectangle(name);
-    buttonContainer.width = width;
-    buttonContainer.height = height;
-    buttonContainer.thickness = 2;
-    buttonContainer.color = "#00E5FF";
-    buttonContainer.background = "#2D004B";
-    buttonContainer.isPointerBlocker = true;
-
-    // Efecto visual manual
-    buttonContainer.metadata = {
-        defaultColor: "#00E5FF",
-        defaultBg: "#2D004B",
-        hoverColor: "#FFFFFF",
-        hoverBg: "#BC00FF"
-    };
-
-    // Texto del botón
-    const textBlock = new TextBlock(name + "_text", text);
-    textBlock.color = "#00E5FF";
-    textBlock.fontSize = 18;
-    textBlock.fontFamily = "Arial";
-    textBlock.fontWeight = "bold";
-    buttonContainer.addControl(textBlock);
-
-    // --- Observables y eventos Manuales ---
-
-    // Al pasar el mouse (Hover)
-    buttonContainer.onPointerEnterObservable.add(() => {
-        buttonContainer.background = buttonContainer.metadata.hoverBg;
-        textBlock.color = buttonContainer.metadata.hoverColor;
-    });
-
-    // Al salir del mouse
-    buttonContainer.onPointerOutObservable.add(() => {
-        buttonContainer.background = buttonContainer.metadata.defaultBg;
-        textBlock.color = buttonContainer.metadata.defaultColor;
-    });
-
-    // Evento Click
-    if (onClick) {
-        buttonContainer.onPointerUpObservable.add(onClick);
+const styles = StyleSheet.create({
+    btn:
+    {
+        backgroundColor: '#2D004B',
+        paddingVertical: 15,
+        paddingHorizontal: 25,
+        borderRadius: 10,
+        borderWidth: 2,
+        borderColor: '#00E5FF'
+    },
+    activeBtn:
+    {
+        backgroundColor: '#BC00FF',
+        borderColor: '#FFFFFF'
+    },
+    btnText:
+    {
+        color: 'white',
+        fontWeight: 'bold'
     }
-
-    // Aplicar escalado de texto si es necesario
-    normalText(textBlock);
-
-
-    // Importante: Devolver el contenedor que actúa como botón
-    return buttonContainer;
-}
-
-
-/**
- * Elimina el botón específico de la UI.
- */
-export function disposeButton(button) {
-    if (button) {
-        button.dispose();
-    }
-}
+});

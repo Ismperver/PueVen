@@ -1,15 +1,5 @@
 import { AdvancedDynamicTexture } from "@babylonjs/gui";
 
-// Polyfill CRÍTICO para Hermes/React Native
-// Evita el crash "ReferenceError: Property 'prompt' doesn't exist"
-if (typeof global.prompt === 'undefined') {
-  global.prompt = (message, defaultValue) => {
-    console.warn("Prompt nativo interceptado (no soportado en Hermes):", message);
-    return defaultValue || "";
-  };
-}
-
-
 /**
  * Instancia global única de la UI fullscreen.
  * Se crea bajo demanda y se reutiliza en toda la aplicación.
@@ -57,20 +47,20 @@ export function getGlobalUI(scene) {
 }
 
 /**
- * Limpia todos los controles de la UI global sin destruirla.
- * 
- * Útil para eliminar paneles temporales (ej: info, menús) sin recrear la textura.
- * 
- * @returns {void}
- * 
- * @example
- * ```js
- * clearGlobalUI(); // Borra todo lo visible
- * showNewPanel();  // Añade nuevo contenido
- * ```
+ * Limpia todos los controles de la UI global de forma segura.
+ * Evita el error 'clearRect' de null deteniendo procesos antes de limpiar.
  */
 export function clearGlobalUI() {
   if (globalUI && !globalUI.isDisposed) {
+    // Obtenemos la escena vinculada a la UI
+    const scene = globalUI.getScene();
+
+    // Detenemos cualquier actualización pendiente antes de limpiar el canvas
+    if (scene && !scene.isDisposed) {
+      scene.onBeforeRenderObservable.clear();
+    }
+
+    // Ejecutamos la limpieza solo si el contexto existe
     globalUI.clear();
   }
 }

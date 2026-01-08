@@ -1,92 +1,109 @@
-import { TextBlock, Image, Control } from "@babylonjs/gui";
-import { createPanel, addControlPanel, disposePanel } from "../../components/Panel.js";
-import { createButton } from "../../components/Button.js";
-import { normalText, bigNormalText } from "../../components/textFormat.js";
+import React from 'react';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 
 /**
- * Variable para saber el panel actual de la tienda.
- * @private
+ * Panel informativo nativo que muestra los detalles de la tienda seleccionada.
+ * Este componente sustituye a la interfaz de Babylon GUI para asegurar fluidez y evitar problemas de teclado.
+ * * @param {Object} props - Propiedades del componente.
+ * @param {Object|null} props.store - Objeto con los datos de la tienda seleccionada.
+ * @param {Function} props.onClose - Función para cerrar el panel y limpiar la selección.
+ * @param {Function} props.onStartAR - Función para iniciar la cámara de Realidad Aumentada.
+ * @returns {JSX.Element|null} El componente renderizado o null si no hay selección.
  */
-let currentStorePanel = null;
+export const StorePanel = ({ store, onClose, onStartAR }) => {
+    // Si no hay ninguna tienda seleccionada, el componente no se renderiza.
+    if (!store) return null;
+
+    return (
+        <View style={styles.infoPanel}>
+            {/* Botón de cierre superior */}
+            <TouchableOpacity style={styles.closeBtn} onPress={onClose}>
+                <Text style={styles.closeBtnText}>CERRAR</Text>
+            </TouchableOpacity>
+
+            {/* Cabecera del panel: Nombre de la tienda */}
+            <Text style={styles.panelTitle}>{store.nombre.toUpperCase()}</Text>
+
+            {/* Subtítulo: Categoría y Nivel */}
+            <Text style={styles.panelCategory}>
+                {store.categoria.toUpperCase()} — PLANTA {store.planta === 0 ? "BAJA" : "PRIMERA"}
+            </Text>
+
+            {/* Cuerpo: Descripción detallada */}
+            <Text style={styles.panelDesc}>{store.descripcion}</Text>
+
+            {/* Acción principal: Inicio del guiado AR */}
+            <TouchableOpacity
+                style={styles.arButton}
+                onPress={() => onStartAR(store)}
+            >
+                <Text style={styles.arButtonText}>INICIAR GUÍADO (AR)</Text>
+            </TouchableOpacity>
+        </View>
+    );
+};
 
 /**
- * Crea un panel flotante con la información detallada de una tienda seleccionada.
- * Este componente muestra el nombre, la categoría y ofrece un botón para
- * iniciar el guiado en Realidad Aumentada.
- *
- * @param {Scene} scene - La escena de Babylon activa.
- * @param {Object} store - Objeto con los datos de la tienda (extraídos del JSON).
- * @param {Function} onGoToStore - Acción a realizar al pulsar "Ir a la tienda".
- * @returns {void}
+ * Estilos del panel de información con temática neón y colores corporativos de la App.
  */
-export function createPanelStore(scene, store, onGoToStore) {
-    // Si ya hay un panel abierto, lo cerramos para evitar solapamientos y errores.
-    if (currentStorePanel) {
-        disposePanelStore();
+const styles = StyleSheet.create({
+    infoPanel: {
+        position: 'absolute',
+        bottom: 120,
+        width: '90%',
+        alignSelf: 'center',
+        backgroundColor: '#190032', // Morado oscuro profundo
+        borderRadius: 20,
+        padding: 20,
+        borderWidth: 2,
+        borderColor: '#BC00FF', // Borde neón morado
+        zIndex: 5,
+        elevation: 10,
+        shadowColor: '#BC00FF',
+        shadowOpacity: 0.8,
+        shadowRadius: 15
+    },
+    closeBtn: {
+        alignSelf: 'flex-end',
+        marginBottom: 10
+    },
+    closeBtnText: {
+        color: '#FFFFFF',
+        fontWeight: 'bold',
+        fontSize: 12,
+        opacity: 0.7
+    },
+    panelTitle: {
+        color: '#00E5FF', // Azul neón
+        fontSize: 24,
+        fontWeight: 'bold',
+        letterSpacing: 1
+    },
+    panelCategory: {
+        color: '#BC00FF',
+        fontSize: 14,
+        marginVertical: 5,
+        fontWeight: '600'
+    },
+    panelDesc: {
+        color: '#FFFFFF',
+        fontSize: 14,
+        lineHeight: 20,
+        marginBottom: 20,
+        marginTop: 10
+    },
+    arButton: {
+        backgroundColor: '#00E5FF',
+        padding: 16,
+        borderRadius: 12,
+        alignItems: 'center',
+        shadowColor: '#00E5FF',
+        shadowOpacity: 0.5,
+        shadowRadius: 10
+    },
+    arButtonText: {
+        color: '#190032',
+        fontWeight: 'bold',
+        fontSize: 16
     }
-
-    // 1. Crear el contenedor base usando nuestro componente Panel.js
-    currentStorePanel = createPanel(scene, {
-        name: `panel_${store.nombre}`,
-        width: "320px",
-        height: "220px",
-        verticalAlignment: Control.VERTICAL_ALIGNMENT_CENTER
-    });
-
-    // 2. Nombre de la Tienda
-    const title = new TextBlock("storeName", store.nombre.toUpperCase());
-    title.color = "#00E5FF";
-    title.height = "40px";
-    title.top = "-70px";
-    bigNormalText(title);
-    addControlPanel(currentStorePanel, title);
-
-    // 3. Categoría y Planta
-    const info = new TextBlock("storeInfo", `${store.categoria} - PLANTA ${store.planta}`);
-    info.color = "#BC00FF";
-    info.height = "30px";
-    info.top = "-30px";
-    normalText(info);
-    addControlPanel(currentStorePanel, info);
-
-    // 4. Botón de Acción "IR A LA TIENDA"
-    const goBtn = createButton(scene, {
-        text: "IR A LA TIENDA",
-        width: "200px",
-        height: "50px",
-        onClick: () => {
-            console.log(`Iniciando ruta hacia: ${store.nombre}`);
-            if (onGoToStore) onGoToStore(store);
-        }
-    });
-    goBtn.verticalAlignment = Control.VERTICAL_ALIGNMENT_BOTTOM;
-    goBtn.top = "-20px";
-
-    addControlPanel(currentStorePanel, goBtn);
-}
-
-/**
- * Muestra información visual de la tienda dentro del panel
- *
- * @param {string} imageUrl - Ruta del asset de la imagen de la tienda.
- */
-export function showInfo(imageUrl) {
-    if (currentStorePanel) {
-        const img = new Image("storeLogo", imageUrl);
-        img.width = "80px";
-        img.height = "80px";
-        img.top = "20px";
-        addControlPanel(currentStorePanel, img);
-    }
-}
-
-/**
- * Cierra el panel de la tienda y libera los recursos de la memoria.
- * Es crucial llamarlo al cambiar de tienda o volver al mapa principal.
- */
-export function disposePanelStore() {
-    if (currentStorePanel) {
-        disposePanel(currentStorePanel);
-        currentStorePanel = null;
-    }
-}
+});

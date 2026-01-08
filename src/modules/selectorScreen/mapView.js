@@ -3,179 +3,101 @@ import { Image } from "react-native";
 import mapFloor0 from "../../assets/maps/pv_planta_baja.png";
 import mapFloor1 from "../../assets/maps/pv_primera_planta.png";
 
+/** @const {Object} MAP_SIZE - Dimensiones del plano del mapa basadas en el diseño del PDF. */
+const MAP_SIZE = { width: 60, height: 100 };
+
 /**
- * Realiza la precarga de los recursos de los mapas (texturas) de forma asíncrona.
- * Retorna una promesa que se resuelve cuando las texturas están listas.
- * @param {Scene} scene - La escena de Babylon donde se colocará el mapa.
- * @returns {Promise<void>} Una promesa que se resuelve cuando las texturas están listas.
+ * Crea o actualiza el plano del mapa en la escena de Babylon de forma segura.
+ * @param {import("@babylonjs/core").Scene} scene - La escena activa.
+ * @param {number} [floor=0] - El nivel de la planta.
+ * @returns {import("@babylonjs/core").Mesh|null} El plano del mapa creado.
  */
-export function loadMapAssets(scene) {
-    return new Promise((resolve, reject) => {
-        console.log("Iniciando carga asíncrona de mapas...");
+export function createMapView(scene, floor = 0) {
+    if (!scene || scene.isDisposed) return null;
 
-        const assets = [mapFloor0, mapFloor1];
-        let loadedCount = 0;
+    const mapName = "groundMap";
+    const existingMap = scene.getMeshByName(mapName);
 
-        if (assets.length === 0) {
-            resolve();
-            return;
-        }
+    // Limpieza segura de recursos previos para evitar error clearRect
+    if (existingMap) {
+        if (existingMap.material) existingMap.material.dispose();
+        existingMap.dispose();
+    }
 
-        assets.forEach(asset => {
-            const resolved = Image.resolveAssetSource(asset);
-            const texture = new Texture(resolved.uri, scene, {
-                onLoad: () => {
-                    loadedCount++;
-                    console.log(`Textura cargada: ${loadedCount}/${assets.length}`);
-                    if (loadedCount === assets.length) {
-                        console.log("Todas las texturas de mapas cargadas.");
-                        resolve();
-                    }
-                },
-                onError: (msg, exception) => {
-                    console.error("Error cargando textura de mapa:", msg, exception);
-                    // Por robustez, contamos como 'loaded' o reject.
-                    // Vamos a reject para que se note el fallo.
-                    reject(new Error("Fallo en carga de mapas"));
-                }
-            });
-        });
+    const ground = MeshBuilder.CreateGround(mapName, {
+        width: MAP_SIZE.width,
+        height: MAP_SIZE.height
+    }, scene);
+
+    const material = new StandardMaterial("mapMaterial", scene);
+    const mapAsset = floor === 1 ? mapFloor1 : mapFloor0;
+    const resolved = Image.resolveAssetSource(mapAsset);
+
+    // Carga de textura optimizada para Babylon Native
+    material.diffuseTexture = new Texture(resolved.uri, scene, {
+        noMipmap: true,
+        onLoad: () => console.log(`Mapa planta ${floor} renderizado.`)
     });
-}
 
-/**
- * Crea el mapa interactivo de Puerto Venicia con soporte para varias plantas.
- * * Configura el plano del suelo con la textura correspondiente a la planta seleccionada
- * y aplica un estilo visual neón coherente con el resto de la aplicación.
- *
- * @param {Scene} scene - La escena de Babylon donde se colocará el mapa.
- * @param {Object} options - Configuración para personalizar el mapa.
- * @param {number} [options.floor=0] - Nivel de la planta (0 para Planta Baja, 1 para Primera Planta).
- * @param {number} [options.sizeW=60] - Ancho del plano basado en la cuadrícula del PDF.
- * @param {number} [options.sizeH=100] - Alto del plano basado en la cuadrícula del PDF.
- * @returns {Mesh} Devuelve el plano del mapa creado.
- */
-export function createMapView(scene, options = {}) {
-    console.log("carga createMapView");
-    const {
-        floor = 0,
-        sizeW = 60,
-        sizeH = 100
-    } = options;
-
-    // Selección de imagen según el PDF (Galería Planta Baja o Primera Planta)
-    // Selección de imagen según el PDF (Galería Planta Baja o Primera Planta)
-    const mapAsset = floor === 0
-        ? mapFloor0
-        : mapFloor1;
-
-    const resolvedMap = Image.resolveAssetSource(mapAsset);
-
-    // Crear el plano (suelo) con las proporciones de la galería
-    const ground = MeshBuilder.CreateGround("groundMap", { width: sizeW, height: sizeH }, scene);
-
-    // Configurar material
-    const mapMaterial = new StandardMaterial("mapMaterial", scene);
-    mapMaterial.diffuseTexture = new Texture(resolvedMap.uri, scene);
-
-    // Hacemos que el mapa sea auto-iluminado
-    mapMaterial.emissiveTexture = mapMaterial.diffuseTexture;
-    mapMaterial.specularColor = new Color3(0, 0, 0); // Evitar reflejos molestos
-    mapMaterial.backFaceCulling = false; // Visible desde ambos lados si es necesario
-
-    ground.material = mapMaterial;
-
-    // Posicionamos el mapa. Si es la planta 1, lo subimos ligeramente en el eje Y
-    ground.position = new Vector3(0, floor * 0.5, 0);
-
-    console.log(`Mapa de Puerto Venecia: Planta ${floor === 0 ? "Baja" : "Primera"} cargada.`);
+    material.specularColor = new Color3(0, 0, 0);
+    ground.material = material;
 
     return ground;
 }
 
 /**
- * Cambia la planta actual del mapa destruyendo la anterior y creando la nueva.
- * * @param {Mesh} currentMap - El objeto del mapa que está actualmente en pantalla.
- * @param {number} newFloor - El número de la nueva planta a cargar.
- * @param {Scene} scene - La escena activa.
- * @returns {Mesh} El nuevo mapa creado.
+ * Cambia la planta actual del mapa.
+ * @param {import("@babylonjs/core").Scene} scene 
+ * @param {number} floorNumber 
  */
-export function switchFloor(currentMap, newFloor, scene) {
-    if (currentMap) {
-        disposeMap(currentMap);
-    }
-    return createMapView(scene, { floor: newFloor });
+export function switchFloor(scene, floorNumber) {
+    return createMapView(scene, floorNumber);
 }
 
 /**
- * Ajusta la cámara para tener una visión perfecta del mapa desde arriba.
- * * @param {Camera} camera - La cámara (Universal o ArcRotate) que queremos mover.
- * @param {number} [height=80] - Altura desde la que queremos ver el mapa.
+ * Ajusta la cámara para una vista cenital del centro comercial.
+ * @param {import("@babylonjs/core").ArcRotateCamera} camera 
  */
-export function focusMap(camera, height = 80) {
-    if (camera) {
-        camera.position = new Vector3(0, height, 0);
-        camera.setTarget(Vector3.Zero());
-    }
+export function focusMap(camera) {
+    if (!camera) return;
+    camera.setTarget(Vector3.Zero());
+    camera.radius = 80;
+    camera.alpha = -Math.PI / 2;
+    camera.beta = Math.PI / 4;
 }
 
 /**
- * Elimina el mapa de la memoria y limpia sus texturas.
- * * Es fundamental para el rendimiento en dispositivos móviles (Babylon Native)
- * para evitar que las imágenes de gran tamaño saturen la RAM.
- * * @param {Mesh} ground - El plano del mapa que se desea eliminar.
+ * Lógica de coordenadas calibrada según la rejilla del PDF.
+ * @param {string} code - Código alfanumérico (ej: "G5" o "D11").
+ * @param {number} floor - Planta para determinar la escala horizontal.
+ * @returns {import("@babylonjs/core").Vector3}
  */
-export function disposeMap(ground) {
-    if (ground) {
-        if (ground.material) {
-            if (ground.material.diffuseTexture) {
-                ground.material.diffuseTexture.dispose();
-            }
-            ground.material.dispose();
-        }
-        ground.dispose();
-        console.log("Recursos del mapa liberados.");
-    }
-}
+export function getCoordinates(code, floor = 0) {
+    if (!code) return new Vector3(0, 0, 0);
 
-/**
- * Convierte una coordenada alfanumérica (ej: "D11") en una posición Vector3 del mundo 3D.
- * Basado en un mapa de 60x100 unidades.
- * 
- * Eje X: A (izquierda/negativo) -> J (derecha/positivo)
- * Eje Z: 1 (arriba/positivo) -> 15 (abajo/negativo)
- * 
- * @param {string} code - Coordenada alfanumérica, ej: "A1", "G5".
- * @returns {Vector3} La posición correspondiente en el espacio 3D (y=0).
- */
-export function getCoordinates(code) {
-    if (!code || code.length < 2) {
-        return new Vector3(0, 0, 0);
-    }
-
-    const columnChar = code.charAt(0).toUpperCase();
-    const rowStr = code.slice(1);
-    const row = parseInt(rowStr, 10);
-
-    // Mapeo de Columnas (A-J) al Eje X (-30 a 30)
-    // Total ancho 60. 10 columnas. Aprox 6 unidades por columna.
-    // A -> -27, B -> -21, ... J -> 27
+    const columnChar = code.charAt(0).toUpperCase(); // Letras A-J
+    const row = parseInt(code.slice(1), 10);        // Números
     const columns = "ABCDEFGHIJ";
     const colIndex = columns.indexOf(columnChar);
 
-    // Si la letra no es válida, devolvemos centro
     if (colIndex === -1) return new Vector3(0, 0, 0);
 
-    // X: de -27 (A) a +27 (J). 
-    // Fórmula: -27 + colIndex * 6
-    const x = -27 + (colIndex * 6);
+    // Eje X (Horizontal): Planta 0 usa 7-12, Planta 1 usa 1-6.
+    const startRow = floor === 0 ? 7 : 1;
+    const x = -30 + (row - startRow) * (60 / 5);
 
-    // Mapeo de Filas (1-15) al Eje Z (50 a -50)
-    // Total alto 100. 15 filas. Aprox 6.6 unidades por fila.
-    // 1 -> 47, 15 -> -46
-    // Fórmula: 50 - ((row - 1) * 6.6) - 3 (ajuste margen)
-    // Simplificado: Inicio en 45, bajando de 6.5 en 6.5
-    const z = 45 - ((row - 1) * 6.5);
+    // Eje Z (Vertical): Letras A-J de abajo hacia arriba.
+    const z = -50 + colIndex * (100 / 9);
 
     return new Vector3(x, 0, z);
+}
+
+/**
+ * Pre-carga las texturas de los mapas.
+ */
+export function loadMapAssets(scene) {
+    return Promise.all([
+        new Promise(res => new Texture(Image.resolveAssetSource(mapFloor0).uri, scene, { onLoad: res })),
+        new Promise(res => new Texture(Image.resolveAssetSource(mapFloor1).uri, scene, { onLoad: res }))
+    ]);
 }
