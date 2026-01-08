@@ -1,0 +1,220 @@
+{
+    "tiendas": [
+        {
+            "id": 1,
+            "nombre": "Alain Afflelou",
+            "categoria": "Belleza y salud",
+            "planta": 0,
+            "coordenadas": "D11",
+            "descripcion": "Especialistas en óptica, graduación de la vista y venta de monturas de diseño.",
+            "logo": "afflelou_logo.png"
+        },
+        {
+            "id": 2,
+            "nombre": "Apple Store",
+            "categoria": "Electrónica",
+            "planta": 1,
+            "coordenadas": "G5",
+            "descripcion": "Punto de venta oficial de productos Apple con servicio técnico especializado.",
+            "logo": "apple_logo.png"
+        },
+        {
+            "id": 3,
+            "nombre": "Bershka",
+            "categoria": "Moda",
+            "planta": 0,
+            "coordenadas": "E11",
+            "descripcion": "Tendencias de moda joven, urbana y atrevida.",
+            "logo": "bershka_logo.png"
+        },
+        {
+            "id": 4,
+            "nombre": "Cinesa",
+            "categoria": "Ocio",
+            "planta": 1,
+            "coordenadas": "G3",
+            "descripcion": "Complejo cinematográfico con salas de última generación y estrenos mundiales.",
+            "logo": "cinesa_logo.png"
+        },
+        {
+            "id": 5,
+            "nombre": "Decathlon",
+            "categoria": "Deportes",
+            "planta": 0,
+            "coordenadas": "C10",
+            "descripcion": "Todo el equipamiento necesario para más de 150 disciplinas deportivas.",
+            "logo": "decathlon_logo.png"
+        },
+        {
+            "id": 6,
+            "nombre": "El Corte Inglés",
+            "categoria": "Grandes almacenes",
+            "planta": 0,
+            "coordenadas": "F10",
+            "descripcion": "Gran superficie con moda, electrónica, alimentación y servicios premium.",
+            "logo": "eci_logo.png"
+        },
+        {
+            "id": 7,
+            "nombre": "Fnac",
+            "categoria": "Cultura y tecnología",
+            "planta": 0,
+            "coordenadas": "F9",
+            "descripcion": "Expertos en libros, música, cine y lo último en electrónica de consumo.",
+            "logo": "fnac_logo.png"
+        },
+        {
+            "id": 8,
+            "nombre": "Foster's Hollywood",
+            "categoria": "Restauración",
+            "planta": 1,
+            "coordenadas": "F4",
+            "descripcion": "Auténtica comida americana en un ambiente cinematográfico.",
+            "logo": "fosters_logo.png"
+        },
+        {
+            "id": 9,
+            "nombre": "Game",
+            "categoria": "Cultura y tecnología",
+            "planta": 1,
+            "coordenadas": "E5",
+            "descripcion": "Especialistas en videojuegos, consolas, merchandising y tecnología.",
+            "logo": "game_logo.png"
+        },
+        {
+            "id": 10,
+            "nombre": "H&M",
+            "categoria": "Moda",
+            "planta": 0,
+            "coordenadas": "D11",
+            "descripcion": "Moda sostenible y tendencias actuales para toda la familia.",
+            "logo": "hm_logo.png"
+        },
+        {
+            "id": 11,
+            "nombre": "IKEA",
+            "categoria": "Hogar",
+            "planta": 1,
+            "coordenadas": "J2",
+            "descripcion": "Soluciones funcionales de decoración y mobiliario para el hogar.",
+            "logo": "ikea_logo.png"
+        },
+        {
+            "id": 12,
+            "nombre": "KFC",
+            "categoria": "Restauración",
+            "planta": 0,
+            "coordenadas": "A10",
+            "descripcion": "Restaurante especializado en pollo frito crujiente con receta secreta.",
+            "logo": "kfc_logo.png"
+        },
+        {
+            "id": 13,
+            "nombre": "Leroy Merlin",
+            "categoria": "Bricolaje",
+            "planta": 1,
+            "coordenadas": "J6",
+            "descripcion": "Productos para la reforma, decoración y mantenimiento del hogar y jardín.",
+            "logo": "leroy_merlin_logo.png"
+        },
+        {
+            "id": 14,
+            "nombre": "Mango",
+            "categoria": "Moda",
+            "planta": 1,
+            "coordenadas": "D6",
+            "descripcion": "Moda contemporánea y sofisticada para mujeres y hombres.",
+            "logo": "mango_logo.png"
+        },
+        {
+            "id": 15,
+            "nombre": "Massimo Dutti",
+            "categoria": "Moda",
+            "planta": 1,
+            "coordenadas": "E6",
+            "descripcion": "Moda refinada y clásica para mujer y hombre.",
+            "logo": "massimo_dutti_logo.png"
+        },
+        {
+            "id": 16,
+            "nombre": "McDonald's",
+            "categoria": "Restauración",
+            "planta": 0,
+            "coordenadas": "B11",
+            "descripcion": "Hamburguesería de servicio rápido famosa por sus menús clásicos.",
+            "logo": "mcdonalds_logo.png"
+        },
+        {
+            "id": 17,
+            "nombre": "MediaMarkt",
+            "categoria": "Electrónica",
+            "planta": 1,
+            "coordenadas": "J4",
+            "descripcion": "Amplio catálogo de electrodomésticos, informática y telefonía.",
+            "logo": "mediamarkt_logo.png"
+        },
+        {
+            "id": 18,
+            "nombre": "Primark",
+            "categoria": "Moda",
+            "planta": 0,
+            "coordenadas": "C11",
+            "descripcion": "Tienda de referencia en moda, calzado y hogar a precios competitivos.",
+            "logo": "primark_logo.png"
+        },
+        {
+            "id": 19,
+            "nombre": "Pull & Bear",
+            "categoria": "Moda",
+            "planta": 1,
+            "coordenadas": "E6",
+            "descripcion": "Ropa cómoda e informal para un público joven y relajado.",
+            "logo": "pull_bear_logo.png"
+        },
+        {
+            "id": 20,
+            "nombre": "Sprinter",
+            "categoria": "Deportes",
+            "planta": 0,
+            "coordenadas": "E9",
+            "descripcion": "Tienda multimarca de calzado, textil y accesorios deportivos.",
+            "logo": "sprinter_logo.png"
+        },
+        {
+            "id": 21,
+            "nombre": "Starbucks",
+            "categoria": "Restauración",
+            "planta": 0,
+            "coordenadas": "G10",
+            "descripcion": "Cafetería especializada en bebidas de café y repostería.",
+            "logo": "starbucks_logo.png"
+        },
+        {
+            "id": 22,
+            "nombre": "Stradivarius",
+            "categoria": "Moda",
+            "planta": 0,
+            "coordenadas": "E11",
+            "descripcion": "Moda femenina con un toque creativo y actual.",
+            "logo": "stradivarius_logo.png"
+        },
+        {
+            "id": 23,
+            "nombre": "Toys 'R' Us",
+            "categoria": "Regalos y juguetes",
+            "planta": 1,
+            "coordenadas": "G4",
+            "descripcion": "Líder en juguetes, videojuegos y artículos para bebés.",
+            "logo": "toysrus_logo.png"
+        },
+        {
+            "id": 24,
+            "nombre": "Zara Man",
+            "categoria": "Moda",
+            "planta": 0,
+            "coordenadas": "F11",
+            "descripcion": "Colecciones exclusivas de moda masculina, desde lo casual hasta lo formal.",
+            "logo": "zara_man_logo.png"
+        }
+    ]
+}
