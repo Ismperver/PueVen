@@ -1,5 +1,15 @@
 import { AdvancedDynamicTexture } from "@babylonjs/gui";
 
+// Polyfill CRÍTICO para Hermes/React Native
+// Evita el crash "ReferenceError: Property 'prompt' doesn't exist"
+if (typeof global.prompt === 'undefined') {
+  global.prompt = (message, defaultValue) => {
+    console.warn("Prompt nativo interceptado (no soportado en Hermes):", message);
+    return defaultValue || "";
+  };
+}
+
+
 /**
  * Instancia global única de la UI fullscreen.
  * Se crea bajo demanda y se reutiliza en toda la aplicación.

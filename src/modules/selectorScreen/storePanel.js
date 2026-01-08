@@ -1,7 +1,7 @@
 import { TextBlock, Image, Control } from "@babylonjs/gui";
-import { createPanel, addControlPanel, disposePanel } from "./Panel.js";
-import { createButton } from "./Button.js";
-import { normalText, bigNormalText } from "./TextFormat.js";
+import { createPanel, addControlPanel, disposePanel } from "../../components/Panel.js";
+import { createButton } from "../../components/Button.js";
+import { normalText, bigNormalText } from "../../components/textFormat.js";
 
 /**
  * Variable para saber el panel actual de la tienda.

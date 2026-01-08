@@ -1,6 +1,6 @@
 import { Button, Control, Rectangle, TextBlock } from "@babylonjs/gui";
 import { getGlobalUI } from "../utils/uiManager.js";
-import { bigNormalText } from "./textFormat.js";
+import { normalText } from "./textFormat.js";
 
 /**
  * Crea un botón con estilo neón y lo añade a la UI global.
@@ -28,26 +28,24 @@ export function createButton(scene, options = {}) {
     buttonContainer.width = width;
     buttonContainer.height = height;
     buttonContainer.thickness = 2;
-    // buttonContainer.cornerRadius = 5; // KEEP DISABLED (Safety First)
     buttonContainer.color = "#00E5FF";
-    buttonContainer.background = "#2D004B"; // FIX: Solid Color (No Transparency) prevents freeze
+    buttonContainer.background = "#2D004B";
     buttonContainer.isPointerBlocker = true;
 
     // Efecto visual manual
     buttonContainer.metadata = {
         defaultColor: "#00E5FF",
-        defaultBg: "#2D004B", // Solid
+        defaultBg: "#2D004B",
         hoverColor: "#FFFFFF",
-        hoverBg: "#BC00FF"    // Solid
+        hoverBg: "#BC00FF"
     };
 
     // Texto del botón
     const textBlock = new TextBlock(name + "_text", text);
     textBlock.color = "#00E5FF";
-    textBlock.fontSize = 18; // FIX: Reasonable size
+    textBlock.fontSize = 18;
     textBlock.fontFamily = "Arial";
     textBlock.fontWeight = "bold";
-    // Centrado por defecto
     buttonContainer.addControl(textBlock);
 
     // --- Observables y eventos Manuales ---
@@ -69,8 +67,8 @@ export function createButton(scene, options = {}) {
         buttonContainer.onPointerUpObservable.add(onClick);
     }
 
-    // Aplicar escalado de texto si es necesario (helper externo)
-    // bigNormalText(textBlock); // REMOVED: Too big
+    // Aplicar escalado de texto si es necesario
+    normalText(textBlock);
 
 
     // Importante: Devolver el contenedor que actúa como botón

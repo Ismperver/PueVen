@@ -137,3 +137,45 @@ export function disposeMap(ground) {
         console.log("Recursos del mapa liberados.");
     }
 }
+
+/**
+ * Convierte una coordenada alfanumérica (ej: "D11") en una posición Vector3 del mundo 3D.
+ * Basado en un mapa de 60x100 unidades.
+ * 
+ * Eje X: A (izquierda/negativo) -> J (derecha/positivo)
+ * Eje Z: 1 (arriba/positivo) -> 15 (abajo/negativo)
+ * 
+ * @param {string} code - Coordenada alfanumérica, ej: "A1", "G5".
+ * @returns {Vector3} La posición correspondiente en el espacio 3D (y=0).
+ */
+export function getCoordinates(code) {
+    if (!code || code.length < 2) {
+        return new Vector3(0, 0, 0);
+    }
+
+    const columnChar = code.charAt(0).toUpperCase();
+    const rowStr = code.slice(1);
+    const row = parseInt(rowStr, 10);
+
+    // Mapeo de Columnas (A-J) al Eje X (-30 a 30)
+    // Total ancho 60. 10 columnas. Aprox 6 unidades por columna.
+    // A -> -27, B -> -21, ... J -> 27
+    const columns = "ABCDEFGHIJ";
+    const colIndex = columns.indexOf(columnChar);
+
+    // Si la letra no es válida, devolvemos centro
+    if (colIndex === -1) return new Vector3(0, 0, 0);
+
+    // X: de -27 (A) a +27 (J). 
+    // Fórmula: -27 + colIndex * 6
+    const x = -27 + (colIndex * 6);
+
+    // Mapeo de Filas (1-15) al Eje Z (50 a -50)
+    // Total alto 100. 15 filas. Aprox 6.6 unidades por fila.
+    // 1 -> 47, 15 -> -46
+    // Fórmula: 50 - ((row - 1) * 6.6) - 3 (ajuste margen)
+    // Simplificado: Inicio en 45, bajando de 6.5 en 6.5
+    const z = 45 - ((row - 1) * 6.5);
+
+    return new Vector3(x, 0, z);
+}

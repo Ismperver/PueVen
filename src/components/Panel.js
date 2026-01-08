@@ -33,7 +33,7 @@ export function createPanel(scene, options = {}) {
     panel.thickness = 2;
 
     // Estética Neón: Morado oscuro translúcido 
-    panel.background = "rgba(25, 0, 50, 0.85)";
+    panel.background = "#190032";
     panel.color = "#BC00FF";
 
     // Alineación predeterminada
