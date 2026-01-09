@@ -24,6 +24,7 @@
     "react": "18.2.0",
     "react-native": "0.73.0",
     "react-native-fs": "^2.20.0",
+    "react-native-permissions": "^5.4.4",
     "text-encoding-polyfill": "^0.6.7"
   },
   "devDependencies": {
