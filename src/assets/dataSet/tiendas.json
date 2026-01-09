@@ -2,219 +2,642 @@
     "tiendas": [
         {
             "id": 1,
-            "nombre": "Alain Afflelou",
-            "categoria": "Belleza y salud",
+            "nombre": "7Fun!",
+            "categoria": "Ocio",
             "planta": 0,
-            "coordenadas": "D11",
-            "descripcion": "Especialistas en óptica, graduación de la vista y venta de monturas de diseño.",
-            "logo": "afflelou_logo.png"
+            "coordenadas": "D9",
+            "descripcion": "Centro de ocio familiar con escalada, realidad virtual y camas elásticas.",
+            "logo": "7fun_logo.png"
         },
         {
             "id": 2,
-            "nombre": "Apple Store",
-            "categoria": "Electrónica",
-            "planta": 1,
-            "coordenadas": "G5",
-            "descripcion": "Punto de venta oficial de productos Apple con servicio técnico especializado.",
-            "logo": "apple_logo.png"
+            "nombre": "Adidas",
+            "categoria": "Deportes",
+            "planta": 0,
+            "coordenadas": "D9",
+            "descripcion": "Ropa, calzado y accesorios deportivos de la marca oficial de las tres bandas.",
+            "logo": "adidas_logo.png"
         },
         {
             "id": 3,
-            "nombre": "Bershka",
-            "categoria": "Moda",
+            "nombre": "Alain Afflelou",
+            "categoria": "Belleza y Salud",
             "planta": 0,
-            "coordenadas": "E11",
-            "descripcion": "Tendencias de moda joven, urbana y atrevida.",
-            "logo": "bershka_logo.png"
+            "coordenadas": "D11",
+            "descripcion": "Óptica y audiología con una amplia gama de monturas y servicios visuales.",
+            "logo": "afflelou_logo.png"
         },
         {
             "id": 4,
+            "nombre": "Anubis Coctelería",
+            "categoria": "Restauración",
+            "planta": 0,
+            "coordenadas": "D10",
+            "descripcion": "Especialistas en coctelería, combinados y picoteo en un ambiente relajado.",
+            "logo": "anubis_logo.png"
+        },
+        {
+            "id": 5,
+            "nombre": "Apple Store",
+            "categoria": "Tecnología",
+            "planta": 1,
+            "coordenadas": "G5",
+            "descripcion": "Tienda oficial de Apple con toda su gama de productos y servicio técnico.",
+            "logo": "apple_logo.png"
+        },
+        {
+            "id": 6,
+            "nombre": "Bershka",
+            "categoria": "Moda",
+            "planta": 0,
+            "coordenadas": "E9",
+            "descripcion": "Moda urbana para jóvenes, combinando música, redes sociales y tendencias.",
+            "logo": "bershka_logo.png"
+        },
+        {
+            "id": 7,
+            "nombre": "Bimba y Lola",
+            "categoria": "Complementos",
+            "planta": 1,
+            "coordenadas": "E5",
+            "descripcion": "Firma de moda y complementos de lujo con diseños vanguardistas.",
+            "logo": "bimbalola_logo.png"
+        },
+        {
+            "id": 8,
+            "nombre": "Burger King",
+            "categoria": "Restauración",
+            "planta": 1,
+            "coordenadas": "F3",
+            "descripcion": "Hamburguesas a la parrilla y menús de comida rápida internacional.",
+            "logo": "burgerking_logo.png"
+        },
+        {
+            "id": 9,
+            "nombre": "C&A",
+            "categoria": "Moda",
+            "planta": 0,
+            "coordenadas": "F9",
+            "descripcion": "Ropa de calidad para toda la familia con un enfoque en la sostenibilidad.",
+            "logo": "ca_logo.png"
+        },
+        {
+            "id": 10,
+            "nombre": "Calzedonia",
+            "categoria": "Moda",
+            "planta": 0,
+            "coordenadas": "D11",
+            "descripcion": "Expertos en calcetines, medias y trajes de baño de diseño italiano.",
+            "logo": "calzedonia_logo.png"
+        },
+        {
+            "id": 11,
             "nombre": "Cinesa",
             "categoria": "Ocio",
             "planta": 1,
             "coordenadas": "G3",
-            "descripcion": "Complejo cinematográfico con salas de última generación y estrenos mundiales.",
+            "descripcion": "Multicines con los últimos estrenos y la mejor tecnología de proyección.",
             "logo": "cinesa_logo.png"
         },
         {
-            "id": 5,
+            "id": 12,
+            "nombre": "Conforama",
+            "categoria": "Hogar",
+            "planta": 1,
+            "coordenadas": "I5",
+            "descripcion": "Tienda de muebles, sofás, colchones y electrodomésticos para tu casa.",
+            "logo": "conforama_logo.png"
+        },
+        {
+            "id": 13,
+            "nombre": "Cortefiel",
+            "categoria": "Moda",
+            "planta": 1,
+            "coordenadas": "F4",
+            "descripcion": "Moda clásica y atemporal para hombres y mujeres que buscan elegancia.",
+            "logo": "cortefiel_logo.png"
+        },
+        {
+            "id": 14,
             "nombre": "Decathlon",
             "categoria": "Deportes",
             "planta": 0,
             "coordenadas": "C10",
-            "descripcion": "Todo el equipamiento necesario para más de 150 disciplinas deportivas.",
+            "descripcion": "Tienda de referencia para equipamiento, ropa y calzado de más de 70 deportes.",
             "logo": "decathlon_logo.png"
         },
         {
-            "id": 6,
-            "nombre": "El Corte Inglés",
-            "categoria": "Grandes almacenes",
+            "id": 15,
+            "nombre": "Deichmann",
+            "categoria": "Calzado",
             "planta": 0,
-            "coordenadas": "F10",
-            "descripcion": "Gran superficie con moda, electrónica, alimentación y servicios premium.",
-            "logo": "eci_logo.png"
+            "coordenadas": "D11",
+            "descripcion": "Zapatos para toda la familia de las mejores marcas a precios económicos.",
+            "logo": "deichmann_logo.png"
         },
         {
-            "id": 7,
-            "nombre": "Fnac",
-            "categoria": "Cultura y tecnología",
+            "id": 16,
+            "nombre": "Desigual",
+            "categoria": "Moda",
             "planta": 0,
-            "coordenadas": "F9",
-            "descripcion": "Expertos en libros, música, cine y lo último en electrónica de consumo.",
+            "coordenadas": "D9",
+            "descripcion": "Ropa y accesorios con diseños coloridos y estampados optimistas.",
+            "logo": "desigual_logo.png"
+        },
+        {
+            "id": 17,
+            "nombre": "El Corte Inglés",
+            "categoria": "Grandes Almacenes",
+            "planta": 0,
+            "coordenadas": "F10",
+            "descripcion": "Amplia variedad de productos desde moda hasta electrónica y alimentación.",
+            "logo": "elcorteingles_logo.png"
+        },
+        {
+            "id": 18,
+            "nombre": "Fnac",
+            "categoria": "Cultura y Tecnología",
+            "planta": 0,
+            "coordenadas": "E9",
+            "descripcion": "Distribuidor líder en libros, música, cine y tecnología avanzada.",
             "logo": "fnac_logo.png"
         },
         {
-            "id": 8,
+            "id": 19,
+            "nombre": "Foot Locker",
+            "categoria": "Calzado",
+            "planta": 0,
+            "coordenadas": "F10",
+            "descripcion": "Distribuidor mundial de calzado y ropa deportiva de las principales marcas.",
+            "logo": "footlocker_logo.png"
+        },
+        {
+            "id": 20,
             "nombre": "Foster's Hollywood",
             "categoria": "Restauración",
             "planta": 1,
             "coordenadas": "F4",
-            "descripcion": "Auténtica comida americana en un ambiente cinematográfico.",
+            "descripcion": "Cadena de restaurantes especializados en auténtica comida americana.",
             "logo": "fosters_logo.png"
         },
         {
-            "id": 9,
+            "id": 21,
             "nombre": "Game",
-            "categoria": "Cultura y tecnología",
+            "categoria": "Ocio",
             "planta": 1,
             "coordenadas": "E5",
-            "descripcion": "Especialistas en videojuegos, consolas, merchandising y tecnología.",
+            "descripcion": "Especialistas en videojuegos, consolas y accesorios de gaming.",
             "logo": "game_logo.png"
         },
         {
-            "id": 10,
+            "id": 22,
+            "nombre": "Guess",
+            "categoria": "Moda",
+            "planta": 0,
+            "coordenadas": "I9",
+            "descripcion": "Marca global de estilo de vida con una gama completa de ropa y accesorios denim.",
+            "logo": "guess_logo.png"
+        },
+        {
+            "id": 23,
             "nombre": "H&M",
             "categoria": "Moda",
             "planta": 0,
             "coordenadas": "D11",
-            "descripcion": "Moda sostenible y tendencias actuales para toda la familia.",
+            "descripcion": "Moda y calidad al mejor precio de manera sostenible para toda la familia.",
             "logo": "hm_logo.png"
         },
         {
-            "id": 11,
+            "id": 24,
+            "nombre": "Hollister",
+            "categoria": "Moda",
+            "planta": 0,
+            "coordenadas": "F11",
+            "descripcion": "Ropa de estilo californiano para un público joven y desenfadado.",
+            "logo": "hollister_logo.png"
+        },
+        {
+            "id": 25,
             "nombre": "IKEA",
             "categoria": "Hogar",
-            "planta": 1,
+            "planta": 0,
             "coordenadas": "J2",
-            "descripcion": "Soluciones funcionales de decoración y mobiliario para el hogar.",
+            "descripcion": "Gran superficie dedicada a muebles, decoración y soluciones para el hogar.",
             "logo": "ikea_logo.png"
         },
         {
-            "id": 12,
+            "id": 26,
+            "nombre": "Intimissimi",
+            "categoria": "Moda",
+            "planta": 0,
+            "coordenadas": "D11",
+            "descripcion": "Lencería y ropa interior italiana de alta calidad para hombre y mujer.",
+            "logo": "intimissimi_logo.png"
+        },
+        {
+            "id": 27,
+            "nombre": "Jack & Jones",
+            "categoria": "Moda",
+            "planta": 0,
+            "coordenadas": "E9",
+            "descripcion": "Especialistas en denim y moda masculina de estilo casual y moderno.",
+            "logo": "jackjones_logo.png"
+        },
+        {
+            "id": 28,
+            "nombre": "JD Sports",
+            "categoria": "Deportes",
+            "planta": 0,
+            "coordenadas": "F10",
+            "descripcion": "Líder en zapatillas y moda deportiva de marcas exclusivas.",
+            "logo": "jdsports_logo.png"
+        },
+        {
+            "id": 29,
+            "nombre": "Juguettos",
+            "categoria": "Juguetes",
+            "planta": 1,
+            "coordenadas": "G4",
+            "descripcion": "Gran selección de juguetes y juegos educativos para niños de todas las edades.",
+            "logo": "juguettos_logo.png"
+        },
+        {
+            "id": 30,
             "nombre": "KFC",
             "categoria": "Restauración",
             "planta": 0,
             "coordenadas": "A10",
-            "descripcion": "Restaurante especializado en pollo frito crujiente con receta secreta.",
+            "descripcion": "Restaurante de comida rápida famoso por su pollo frito con receta original.",
             "logo": "kfc_logo.png"
         },
         {
-            "id": 13,
-            "nombre": "Leroy Merlin",
-            "categoria": "Bricolaje",
-            "planta": 1,
-            "coordenadas": "J6",
-            "descripcion": "Productos para la reforma, decoración y mantenimiento del hogar y jardín.",
-            "logo": "leroy_merlin_logo.png"
+            "id": 31,
+            "nombre": "Kiabi",
+            "categoria": "Moda",
+            "planta": 0,
+            "coordenadas": "A9",
+            "descripcion": "Moda a precios asequibles para toda la familia.",
+            "logo": "kiabi_logo.png"
         },
         {
-            "id": 14,
+            "id": 32,
+            "nombre": "Lefties",
+            "categoria": "Moda",
+            "planta": 0,
+            "coordenadas": "E9",
+            "descripcion": "Moda accesible para mujer, hombre e infantil con las últimas tendencias.",
+            "logo": "lefties_logo.png"
+        },
+        {
+            "id": 33,
+            "nombre": "Leroy Merlin",
+            "categoria": "Hogar",
+            "planta": 1,
+            "coordenadas": "I6",
+            "descripcion": "Especialistas en acondicionamiento del hogar, bricolaje y jardinería.",
+            "logo": "leroymerlin_logo.png"
+        },
+        {
+            "id": 34,
+            "nombre": "Levi's",
+            "categoria": "Moda",
+            "planta": 0,
+            "coordenadas": "I10",
+            "descripcion": "Líder mundial en vaqueros y ropa casual auténtica.",
+            "logo": "levis_logo.png"
+        },
+        {
+            "id": 35,
+            "nombre": "Maisons du Monde",
+            "categoria": "Hogar",
+            "planta": 1,
+            "coordenadas": "J3",
+            "descripcion": "Muebles y decoración de estilos variados para un hogar único.",
+            "logo": "maisons_logo.png"
+        },
+        {
+            "id": 36,
             "nombre": "Mango",
             "categoria": "Moda",
-            "planta": 1,
-            "coordenadas": "D6",
-            "descripcion": "Moda contemporánea y sofisticada para mujeres y hombres.",
+            "planta": 0,
+            "coordenadas": "D11",
+            "descripcion": "Diseño, fabricación y comercialización de prendas de vestir y accesorios.",
             "logo": "mango_logo.png"
         },
         {
-            "id": 15,
+            "id": 37,
+            "nombre": "Mango Man",
+            "categoria": "Moda",
+            "planta": 1,
+            "coordenadas": "E5",
+            "descripcion": "Línea masculina de Mango enfocada en moda contemporánea y sastrería.",
+            "logo": "mangoman_logo.png"
+        },
+        {
+            "id": 38,
+            "nombre": "Marco Aldany",
+            "categoria": "Belleza y Salud",
+            "planta": 0,
+            "coordenadas": "G9",
+            "descripcion": "Cadena líder de peluquería y estética con servicios de vanguardia.",
+            "logo": "marcoaldany_logo.png"
+        },
+        {
+            "id": 39,
+            "nombre": "Marypaz",
+            "categoria": "Calzado",
+            "planta": 0,
+            "coordenadas": "D11",
+            "descripcion": "Calzado femenino y accesorios siguiendo las últimas tendencias de moda.",
+            "logo": "marypaz_logo.png"
+        },
+        {
+            "id": 40,
             "nombre": "Massimo Dutti",
             "categoria": "Moda",
             "planta": 1,
-            "coordenadas": "E6",
-            "descripcion": "Moda refinada y clásica para mujer y hombre.",
-            "logo": "massimo_dutti_logo.png"
+            "coordenadas": "E5",
+            "descripcion": "Moda elegante y sofisticada con un diseño urbano y cosmopolita.",
+            "logo": "massimodutti_logo.png"
         },
         {
-            "id": 16,
+            "id": 41,
             "nombre": "McDonald's",
             "categoria": "Restauración",
             "planta": 0,
             "coordenadas": "B11",
-            "descripcion": "Hamburguesería de servicio rápido famosa por sus menús clásicos.",
+            "descripcion": "Cadena líder mundial de restaurantes de servicio rápido.",
             "logo": "mcdonalds_logo.png"
         },
         {
-            "id": 17,
+            "id": 42,
             "nombre": "MediaMarkt",
-            "categoria": "Electrónica",
+            "categoria": "Tecnología",
             "planta": 1,
-            "coordenadas": "J4",
-            "descripcion": "Amplio catálogo de electrodomésticos, informática y telefonía.",
+            "coordenadas": "I4",
+            "descripcion": "Líder en informática, electrónica de consumo y electrodomésticos.",
             "logo": "mediamarkt_logo.png"
         },
         {
-            "id": 18,
+            "id": 43,
+            "nombre": "Milbby",
+            "categoria": "Ocio",
+            "planta": 1,
+            "coordenadas": "H4",
+            "descripcion": "El paraíso de las manualidades y bellas artes para todas las edades.",
+            "logo": "milbby_logo.png"
+        },
+        {
+            "id": 44,
+            "nombre": "Misako",
+            "categoria": "Complementos",
+            "planta": 0,
+            "coordenadas": "D11",
+            "descripcion": "Especialistas en bolsos, maletas y accesorios de viaje.",
+            "logo": "misako_logo.png"
+        },
+        {
+            "id": 45,
+            "nombre": "Movistar",
+            "categoria": "Telefonía",
+            "planta": 0,
+            "coordenadas": "E11",
+            "descripcion": "Servicios de telecomunicaciones y dispositivos de última generación.",
+            "logo": "movistar_logo.png"
+        },
+        {
+            "id": 46,
+            "nombre": "Nike Factory",
+            "categoria": "Deportes",
+            "planta": 0,
+            "coordenadas": "D8",
+            "descripcion": "Tienda outlet oficial de Nike con ofertas en deporte y estilo de vida.",
+            "logo": "nike_logo.png"
+        },
+        {
+            "id": 47,
+            "nombre": "Norauto",
+            "categoria": "Motor",
+            "planta": 0,
+            "coordenadas": "M11",
+            "descripcion": "Centro especializado en mantenimiento y equipamiento de automóviles.",
+            "logo": "norauto_logo.png"
+        },
+        {
+            "id": 48,
+            "nombre": "Pandora",
+            "categoria": "Joyería",
+            "planta": 1,
+            "coordenadas": "E5",
+            "descripcion": "Joyería contemporánea acabada a mano y charms personalizados.",
+            "logo": "pandora_logo.png"
+        },
+        {
+            "id": 49,
+            "nombre": "Parfois",
+            "categoria": "Complementos",
+            "planta": 0,
+            "coordenadas": "D11",
+            "descripcion": "Accesorios, bolsos y bisutería de tendencia.",
+            "logo": "parfois_logo.png"
+        },
+        {
+            "id": 50,
+            "nombre": "Pedro del Hierro",
+            "categoria": "Moda",
+            "planta": 1,
+            "coordenadas": "E5",
+            "descripcion": "Firma de moda española con diseños elegantes y exclusivos.",
+            "logo": "pedrohierro_logo.png"
+        },
+        {
+            "id": 51,
+            "nombre": "Pepe Jeans",
+            "categoria": "Moda",
+            "planta": 1,
+            "coordenadas": "E5",
+            "descripcion": "Marca icónica de denim y moda urbana.",
+            "logo": "pepejeans_logo.png"
+        },
+        {
+            "id": 52,
+            "nombre": "Porcelanosa",
+            "categoria": "Hogar",
+            "planta": 1,
+            "coordenadas": "H2",
+            "descripcion": "Referente en pavimentos, revestimientos cerámicos y diseño de baños.",
+            "logo": "porcelanosa_logo.png"
+        },
+        {
+            "id": 53,
             "nombre": "Primark",
             "categoria": "Moda",
             "planta": 0,
             "coordenadas": "C11",
-            "descripcion": "Tienda de referencia en moda, calzado y hogar a precios competitivos.",
+            "descripcion": "Tienda departamental de moda, belleza y hogar a precios increíbles.",
             "logo": "primark_logo.png"
         },
         {
-            "id": 19,
-            "nombre": "Pull & Bear",
-            "categoria": "Moda",
-            "planta": 1,
-            "coordenadas": "E6",
-            "descripcion": "Ropa cómoda e informal para un público joven y relajado.",
-            "logo": "pull_bear_logo.png"
+            "id": 54,
+            "nombre": "Primor",
+            "categoria": "Belleza y Salud",
+            "planta": 0,
+            "coordenadas": "G9",
+            "descripcion": "Perfumería con grandes descuentos en marcas de lujo y cosmética.",
+            "logo": "primor_logo.png"
         },
         {
-            "id": 20,
+            "id": 55,
+            "nombre": "Pull & Bear",
+            "categoria": "Moda",
+            "planta": 0,
+            "coordenadas": "E11",
+            "descripcion": "Moda cómoda y relajada inspirada en la cultura juvenil internacional.",
+            "logo": "pullbear_logo.png"
+        },
+        {
+            "id": 56,
+            "nombre": "Rituals",
+            "categoria": "Belleza",
+            "planta": 1,
+            "coordenadas": "E5",
+            "descripcion": "Productos de cosmética y cuidado personal inspirados en rituales orientales.",
+            "logo": "rituals_logo.png"
+        },
+        {
+            "id": 57,
+            "nombre": "Scalpers",
+            "categoria": "Moda",
+            "planta": 1,
+            "coordenadas": "E5",
+            "descripcion": "Moda masculina y femenina con un toque rebelde pero sofisticado.",
+            "logo": "scalpers_logo.png"
+        },
+        {
+            "id": 58,
+            "nombre": "Sephora",
+            "categoria": "Belleza",
+            "planta": 1,
+            "coordenadas": "E5",
+            "descripcion": "Líder en belleza con maquillaje, perfumes y tratamientos.",
+            "logo": "sephora_logo.png"
+        },
+        {
+            "id": 59,
+            "nombre": "Snipes",
+            "categoria": "Calzado",
+            "planta": 0,
+            "coordenadas": "F10",
+            "descripcion": "Tienda especializada en streetwear y calzado deportivo.",
+            "logo": "snipes_logo.png"
+        },
+        {
+            "id": 60,
+            "nombre": "Springfield",
+            "categoria": "Moda",
+            "planta": 0,
+            "coordenadas": "D11",
+            "descripcion": "Moda urbana y casual diseñada para hombres y mujeres jóvenes.",
+            "logo": "springfield_logo.png"
+        },
+        {
+            "id": 61,
             "nombre": "Sprinter",
             "categoria": "Deportes",
             "planta": 0,
             "coordenadas": "E9",
-            "descripcion": "Tienda multimarca de calzado, textil y accesorios deportivos.",
+            "descripcion": "Tu tienda de deportes con las mejores marcas de ropa y calzado.",
             "logo": "sprinter_logo.png"
         },
         {
-            "id": 21,
+            "id": 62,
             "nombre": "Starbucks",
             "categoria": "Restauración",
             "planta": 0,
             "coordenadas": "G10",
-            "descripcion": "Cafetería especializada en bebidas de café y repostería.",
+            "descripcion": "Expertos en café de alta calidad y un ambiente acogedor.",
             "logo": "starbucks_logo.png"
         },
         {
-            "id": 22,
+            "id": 63,
             "nombre": "Stradivarius",
             "categoria": "Moda",
             "planta": 0,
-            "coordenadas": "E11",
-            "descripcion": "Moda femenina con un toque creativo y actual.",
+            "coordenadas": "D11",
+            "descripcion": "Moda femenina con un toque creativo y actual para el día a día.",
             "logo": "stradivarius_logo.png"
         },
         {
-            "id": 23,
+            "id": 64,
+            "nombre": "Terminal Zero",
+            "categoria": "Ocio",
+            "planta": 0,
+            "coordenadas": "H12",
+            "descripcion": "Parque de trampolines y ocio activo para todas las edades.",
+            "logo": "terminalzero_logo.png"
+        },
+        {
+            "id": 65,
+            "nombre": "Tezenis",
+            "categoria": "Moda",
+            "planta": 0,
+            "coordenadas": "D11",
+            "descripcion": "Ropa interior, calcetines y moda joven con estilo moderno.",
+            "logo": "tezenis_logo.png"
+        },
+        {
+            "id": 66,
+            "nombre": "Tino González",
+            "categoria": "Calzado",
+            "planta": 0,
+            "coordenadas": "D11",
+            "descripcion": "Amplio catálogo de zapatos de moda para todas las ocasiones.",
+            "logo": "tinogonzalez_logo.png"
+        },
+        {
+            "id": 67,
             "nombre": "Toys 'R' Us",
-            "categoria": "Regalos y juguetes",
+            "categoria": "Ocio",
             "planta": 1,
-            "coordenadas": "G4",
-            "descripcion": "Líder en juguetes, videojuegos y artículos para bebés.",
+            "coordenadas": "G3",
+            "descripcion": "Gran superficie dedicada a juguetes y artículos infantiles.",
             "logo": "toysrus_logo.png"
         },
         {
-            "id": 24,
+            "id": 68,
+            "nombre": "Udon",
+            "categoria": "Restauración",
+            "planta": 0,
+            "coordenadas": "G10",
+            "descripcion": "Noodle bar especializado en cocina asiática saludable.",
+            "logo": "udon_logo.png"
+        },
+        {
+            "id": 69,
+            "nombre": "Xiaomi",
+            "categoria": "Tecnología",
+            "planta": 1,
+            "coordenadas": "F4",
+            "descripcion": "Dispositivos inteligentes y telefonía de la popular marca tecnológica.",
+            "logo": "xiaomi_logo.png"
+        },
+        {
+            "id": 70,
+            "nombre": "Zara Home",
+            "categoria": "Hogar",
+            "planta": 1,
+            "coordenadas": "E5",
+            "descripcion": "Colecciones textiles y accesorios para el hogar con diseño de vanguardia.",
+            "logo": "zarahome_logo.png"
+        },
+        {
+            "id": 71,
             "nombre": "Zara Man",
             "categoria": "Moda",
             "planta": 0,
             "coordenadas": "F11",
-            "descripcion": "Colecciones exclusivas de moda masculina, desde lo casual hasta lo formal.",
-            "logo": "zara_man_logo.png"
+            "descripcion": "Sección masculina de Zara con las últimas tendencias globales.",
+            "logo": "zaraman_logo.png"
         }
     ]
 }
