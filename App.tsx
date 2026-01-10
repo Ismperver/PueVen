@@ -116,8 +116,8 @@ const App = () => {
       await startARScreen(scene, store, () => {
         setIsARActive(false);
         setSelectedStore(null);
-        initSelectorScreen(scene, (s) => setSelectedStore(s));
-        renderStoreTargets(scene, currentFloor, (s) => setSelectedStore(s));
+        initSelectorScreen(scene, (s: Tienda) => setSelectedStore(s));
+        renderStoreTargets(scene, currentFloor, (s: Tienda) => setSelectedStore(s));
       });
     }
   };
