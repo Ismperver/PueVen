@@ -14,15 +14,21 @@ let currentMapMesh = null;
  * @type {import("@babylonjs/core").Mesh[]} 
  */
 let storeTargets = [];
+/**
+ * Variable global para almacenar el callback de selección de tienda.
+ * Evita tener que pasarlo en cada llamada de inicialización.
+ */
+let selectionCallback = () => { };
 
 /**
- * Renderiza exclusivamente los marcadores de la planta seleccionada.
- * Esta función limpia los pines anteriores y dibuja solo los correspondientes al nivel actual.
- * * @param {import("@babylonjs/core").Scene} scene - La escena activa de Babylon.
- * @param {number} floor - Planta actual a renderizar (0 para Planta Baja, 1 para Primera).
- * @param {Function} onStoreSelected - Callback ejecutado al pulsar una tienda.
+ * Configura el callback que se ejecutará al pulsar una tienda.
+ * @param {Function} cb - Función (store) => void
  */
-export function renderStoreTargets(scene, floor, onStoreSelected) {
+export function setSelectionCallback(cb) {
+    if (cb) selectionCallback = cb;
+}
+
+export function renderStoreTargets(scene, floor) {
     // 1. Limpieza exhaustiva de marcadores existentes del nivel anterior
     storeTargets.forEach(target => disposeTarget(target));
     storeTargets = [];
@@ -54,14 +60,15 @@ export function renderStoreTargets(scene, floor, onStoreSelected) {
  * * @param {import("@babylonjs/core").Scene} scene - La escena activa de Babylon.
  * @param {Function} onStoreSelected - Callback de React para manejar la selección de tienda.
  */
-export function initSelectorScreen(scene, onStoreSelected) {
+// Eliminamos el parámetro onStoreSelected ya que usaremos el global
+export function initSelectorScreen(scene) {
     disposeSelector();
 
     // Crear el mapa de la planta baja (0) por defecto
     currentMapMesh = createMapView(scene, 0);
 
-    // Dibujar los marcadores iniciales
-    renderStoreTargets(scene, 0, onStoreSelected);
+    // Dibujar los marcadores iniciales sin pasar callback (ya usan el global si fuera necesario, o interactividad por pointer)
+    renderStoreTargets(scene, 0);
 
     // Gestor de eventos de puntero global para detectar taps en los targets 3D
     scene.onPointerObservable.add((pointerInfo) => {
@@ -70,7 +77,8 @@ export function initSelectorScreen(scene, onStoreSelected) {
             const pickedMesh = pointerInfo.pickInfo.pickedMesh;
             // Verificamos si el objeto pulsado es un marcador con datos asociados
             if (pickedMesh && pickedMesh.metadata && pickedMesh.metadata.storeData) {
-                onStoreSelected(pickedMesh.metadata.storeData);
+                // Usamos la variable global
+                selectionCallback(pickedMesh.metadata.storeData);
             }
         }
     });

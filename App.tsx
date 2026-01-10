@@ -5,7 +5,7 @@ import { EngineView } from '@babylonjs/react-native';
 import { Scene, Camera } from '@babylonjs/core';
 
 import { usePlaygroundScene } from './init.js';
-import { initSelectorScreen, focusStore, renderStoreTargets } from './src/modules/selectorScreen/selectorScreen.js';
+import { initSelectorScreen, focusStore, renderStoreTargets, setSelectionCallback } from './src/modules/selectorScreen/selectorScreen.js';
 import { switchFloor } from './src/modules/selectorScreen/mapView.js';
 import tiendasData from './src/assets/dataSet/tiendas.json';
 
@@ -66,9 +66,16 @@ const App = () => {
    */
   useEffect(() => {
     if (scene) {
-      initSelectorScreen(scene, (store: Tienda) => setSelectedStore(store));
-      const timer = setTimeout(() => setShowUI(true), 2000);
+      console.log("App: Scene ready, initializing selector...");
+      setSelectionCallback((store: Tienda) => setSelectedStore(store));
+      initSelectorScreen(scene);
+      const timer = setTimeout(() => {
+        console.log("App: Setting showUI to true");
+        setShowUI(true);
+      }, 2000);
       return () => clearTimeout(timer);
+    } else {
+      console.log("App: Waiting for scene...");
     }
   }, [scene]);
 
@@ -99,7 +106,7 @@ const App = () => {
   const handleFloorChange = (floor: number) => {
     if (scene && typeof scene.getMeshByName === 'function') {
       switchFloor(scene, floor);
-      renderStoreTargets(scene, floor, (store: Tienda) => setSelectedStore(store));
+      renderStoreTargets(scene, floor);
       setCurrentFloor(floor);
       setSelectedStore(null);
     }
@@ -116,19 +123,28 @@ const App = () => {
       await startARScreen(scene, store, () => {
         setIsARActive(false);
         setSelectedStore(null);
-        initSelectorScreen(scene, (s: Tienda) => setSelectedStore(s));
-        renderStoreTargets(scene, currentFloor, (s: Tienda) => setSelectedStore(s));
+        initSelectorScreen(scene);
+        renderStoreTargets(scene, currentFloor);
       });
     }
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: '#0A0A0A' }}>
-      <StatusBar barStyle="light-content" />
-      <View style={{ flex: 1 }}>
-        <EngineView camera={camera} displayFrameRate={false} />
+    <View style={styles.root}>
+      <StatusBar barStyle="light-content" translucent backgroundColor="transparent" />
 
-        {/* Renderizado condicional de la UI: Solo visible si no estamos en modo AR activo */}
+      {/* CAPA 1: Motor 3D y Cámara AR */}
+      <EngineView
+        camera={camera}
+        displayFrameRate={false}
+        isTransparent={true} // Obligatorio para ver la cámara en AR
+        androidView="TextureView" // Fix: Usar TextureView para permitir superposición de UI en Android
+        style={styles.engineView}
+      />
+
+      {/* CAPA 2: Interfaz de Usuario (Overlay) */}
+      <View style={styles.uiOverlay} pointerEvents="box-none">
+        {/* Mostramos la búsqueda y botones solo si NO estamos en AR para limpiar la visión */}
         {showUI && !isARActive && (
           <>
             <SearchBar
@@ -170,7 +186,7 @@ const App = () => {
           </>
         )}
       </View>
-    </SafeAreaView>
+    </View>
   );
 };
 
@@ -178,13 +194,26 @@ const App = () => {
  * Estilos para los contenedores de la interfaz nativa.
  */
 const styles = StyleSheet.create({
+  root: {
+    flex: 1,
+    backgroundColor: 'black',
+  },
+  engineView: {
+    ...StyleSheet.absoluteFillObject,
+    zIndex: 1, // El motor siempre al fondo
+  },
+  uiOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    zIndex: 10, // La UI siempre encima del motor
+    elevation: 10, // Android Fix: Elevar la capa sobre vistas nativas
+  },
   floorButtonsContainer: {
     position: 'absolute',
     bottom: 30,
     width: '100%',
     flexDirection: 'row',
     justifyContent: 'space-around',
-    paddingHorizontal: 20
+    paddingHorizontal: 20,
   }
 });
 
