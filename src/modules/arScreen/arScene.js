@@ -34,10 +34,11 @@ export async function initARSession(scene) {
             referenceSpaceType: 'unbounded',
             inputOptions: {
                 doNotLoadControllerMeshes: true
-            }
+            },
+            disableTeleportation: true
         });
 
-        // RE-FORZAMOS la transparencia después de iniciar XR para que el TextureView no renderice negro
+        // RE-FORZAMOS la transparencia después de iniciar
         scene.clearColor = new Color4(0, 0, 0, 0);
 
         await new Promise(resolve => setTimeout(resolve, 100));
