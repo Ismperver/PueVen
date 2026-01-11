@@ -138,7 +138,7 @@ const App = () => {
         camera={camera}
         displayFrameRate={false}
         isTransparent={true} // Obligatorio para ver la cámara en AR
-        androidView="TextureView" // Fix: Usar TextureView para permitir superposición de UI en Android
+        androidView="SurfaceViewZMediaOverlay"
         style={styles.engineView}
       />
 
@@ -196,7 +196,7 @@ const App = () => {
 const styles = StyleSheet.create({
   root: {
     flex: 1,
-    backgroundColor: 'black',
+    backgroundColor: 'transparent',
   },
   engineView: {
     ...StyleSheet.absoluteFillObject,

@@ -11,6 +11,11 @@ export async function createARScene(scene) {
 
     // Transparencia total del fondo
     scene.clearColor = new Color4(0, 0, 0, 0);
+    scene.environmentTexture = null;
+
+    // Desactivar skybox si existe
+    const skybox = scene.getMeshByName("skyBox");
+    if (skybox) skybox.dispose();
 
     createHemisphereLight(scene);
     optimizeForAR(scene);
@@ -26,8 +31,14 @@ export async function initARSession(scene) {
         const xrHelper = await scene.createDefaultXRExperienceAsync({
             disableDefaultUI: true,
             sessionMode: 'immersive-ar',
-            referenceSpaceType: 'unbounded'
+            referenceSpaceType: 'unbounded',
+            inputOptions: {
+                doNotLoadControllerMeshes: true
+            }
         });
+
+        // RE-FORZAMOS la transparencia después de iniciar XR para que el TextureView no renderice negro
+        scene.clearColor = new Color4(0, 0, 0, 0);
 
         await new Promise(resolve => setTimeout(resolve, 100));
 
