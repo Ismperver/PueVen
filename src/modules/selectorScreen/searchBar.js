@@ -2,14 +2,18 @@ import React, { useState } from 'react';
 import { View, TextInput, Text, TouchableOpacity, StyleSheet, ScrollView, Modal, FlatList } from 'react-native';
 
 /**
- * Barra de búsqueda modular con filtro por categoría y resultados desplazables.
- * @param {Object} props - Propiedades del componente.
- * @param {string} props.searchTerm - Texto de búsqueda actual.
- * @param {Function} props.onSearch - Callback al escribir.
- * @param {Array} props.results - Lista de tiendas filtradas.
- * @param {Function} props.onSelect - Callback al elegir tienda.
- * @param {Array} props.categories - Lista de categorías disponibles.
- * @param {Function} props.onCategorySelect - Callback al filtrar por categoría.
+ * Componente funcional de barra de búsqueda modular.
+ * Integra capacidades de filtrado por texto y por categoría, presentando los resultados en una lista desplegable.
+ * Diseñado para superponerse a la interfaz 3D.
+ *
+ * @param {Object} props - Objeto de propiedades del componente.
+ * @param {string} props.searchTerm - Valor actual del campo de texto de búsqueda.
+ * @param {Function} props.onSearch - Función manejadora (callback) que se ejecuta al modificar el texto.
+ * @param {Array} props.results - Arreglo de objetos de tienda filtrados a mostrar.
+ * @param {Function} props.onSelect - Función callback ejecutada al seleccionar una tienda de la lista.
+ * @param {Array} props.categories - Arreglo de categorías disponibles para el filtrado.
+ * @param {Function} props.onCategorySelect - Función callback ejecutada al seleccionar una opción del filtro de categorías.
+ * @returns {JSX.Element} Elemento React renderizado.
  */
 export const SearchBar = ({ searchTerm, onSearch, results, onSelect, categories = [], onCategorySelect }) => {
     const [showCats, setShowCats] = useState(false);

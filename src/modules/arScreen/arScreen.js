@@ -2,11 +2,19 @@ import { initARSession } from "./arScene.js";
 import { disposeSelector } from "../selectorScreen/selectorScreen.js";
 import { getCoordinates } from "../selectorScreen/mapView.js";
 import { setupPath, updatePathVisibility, createTargetMarker } from "./arHelpers.js";
-// Importamos las funciones de escalado (Asumiendo ruta components/TextFormat.js según estructura común)
 import { subtitleText, bigNormalText } from "../../components/textFormat.js";
 import { AdvancedDynamicTexture, Button, Control, Rectangle, TextBlock, Grid } from "@babylonjs/gui";
 import { Vector3 } from "@babylonjs/core";
 
+/**
+ * Inicia y gestiona el ciclo de vida de la pantalla de navegación en Realidad Aumentada.
+ * Configura la sesión AR, genera la ruta de navegación visual hacia la tienda objetivo y gestiona la interfaz gráfica HUD.
+ * Monitoriza la posición del usuario en tiempo real para actualizar las indicaciones.
+ *
+ * @param {import("@babylonjs/core").Scene} scene - La escena activa.
+ * @param {Object} store - Datos de la tienda seleccionada como destino.
+ * @param {Function} onBackToMap - Callback para retornar a la vista de mapa (salir de AR).
+ */
 export async function startARScreen(scene, store, onBackToMap) {
     if (!scene || !store) return;
 
@@ -20,17 +28,17 @@ export async function startARScreen(scene, store, onBackToMap) {
 
     const destPos = getCoordinates(store.coordenadas, store.planta);
 
-    // 1. CREACIÓN ESTÁTICA (Sin setInterval) para evitar parpadeo
+    // Generación de elementos estáticos de la ruta
     const navigationArrows = setupPath(scene, store);
     const targetMarker = createTargetMarker(scene, destPos);
 
-    // --- UI FULLSCREEN ---
+    // --- UI FULLSCREEN (HUD) ---
     const advancedTexture = AdvancedDynamicTexture.CreateFullscreenUI("AR_UI", true, scene);
 
-    // PANEL SUPERIOR (Verde)
+    // Panel Informativo Superior
     const topPanel = new Rectangle("topPanel");
     topPanel.width = "90%";
-    topPanel.height = "200px"; // Alto para acomodar texto escalado
+    topPanel.height = "200px";
     topPanel.background = "#2ecc71";
     topPanel.cornerRadius = 40;
     topPanel.thickness = 0;
@@ -47,7 +55,7 @@ export async function startARScreen(scene, store, onBackToMap) {
     subtitleText(distanceText);
     topPanel.addControl(distanceText);
 
-    // PANEL INFERIOR (Azul)
+    // Panel de Control Inferior
     const bottomPanel = new Rectangle("bottomPanel");
     bottomPanel.width = "95%";
     bottomPanel.height = "180px";
@@ -58,29 +66,27 @@ export async function startARScreen(scene, store, onBackToMap) {
     bottomPanel.bottom = "40px";
     advancedTexture.addControl(bottomPanel);
 
-    // Usamos un GRID para organizar Texto (Izq) y Botón (Der)
+    // Grilla de organización para el panel inferior
     const grid = new Grid();
-    grid.addColumnDefinition(0.65); // 65% para el nombre
-    grid.addColumnDefinition(0.35); // 35% para el botón
+    grid.addColumnDefinition(0.65); // 65% espacio para nombre
+    grid.addColumnDefinition(0.35); // 35% espacio para botón
     bottomPanel.addControl(grid);
 
-    // Nombre de la Tienda
+    // Etiqueta del Nombre de la Tienda
     const storeNameText = new TextBlock();
     storeNameText.text = store.nombre.toUpperCase();
     storeNameText.color = "white";
     storeNameText.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
     storeNameText.paddingLeft = "40px";
 
-    // Configuración para evitar que el escalado mueva el texto fuera de vista
-    storeNameText.transformCenterX = 0; // Escalar desde la izquierda
-    storeNameText.textWrapping = true;  // Permitir saltos de línea si es muy largo
+    storeNameText.transformCenterX = 0;
+    storeNameText.textWrapping = true;
 
-    // USAMOS TextFormat.js para subtítulo
     bigNormalText(storeNameText);
 
     grid.addControl(storeNameText, 0, 0);
 
-    // Botón Volver
+    // Botón de Retorno
     const backBtn = Button.CreateSimpleButton("backBtn", "VOLVER");
     backBtn.width = "90%";
     backBtn.height = "80%";
@@ -89,7 +95,6 @@ export async function startARScreen(scene, store, onBackToMap) {
     backBtn.cornerRadius = 30;
     backBtn.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_CENTER;
 
-    // Accedemos al TextBlock interno del botón para escalarlo
     if (backBtn.textBlock) {
         backBtn.textBlock.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_CENTER;
         bigNormalText(backBtn.textBlock);
@@ -97,7 +102,7 @@ export async function startARScreen(scene, store, onBackToMap) {
 
     grid.addControl(backBtn, 0, 1);
 
-    // --- LÓGICA DE LIMPIEZA ---
+    // --- Procedimiento de Limpieza y Salida ---
     const cleanup = async () => {
         scene.onBeforeRenderObservable.remove(renderObserver);
         if (navigationArrows) navigationArrows.forEach(a => a.dispose());
@@ -109,6 +114,7 @@ export async function startARScreen(scene, store, onBackToMap) {
 
     backBtn.onPointerUpObservable.add(cleanup);
 
+    // Loop de renderizado para actualizaciones en tiempo real
     const renderObserver = scene.onBeforeRenderObservable.add(() => {
         if (!xr.baseExperience.camera) return;
 
@@ -117,13 +123,11 @@ export async function startARScreen(scene, store, onBackToMap) {
 
         distanceText.text = `FALTAN: ${Math.round(dist)} METROS`;
 
-        // Actualizamos qué flechas se ven y cuáles no
         updatePathVisibility(navigationArrows, currentPos, destPos);
 
         if (dist < 3) {
             distanceText.text = "¡LLEGASTE!";
             topPanel.background = "#e67e22";
-            // Opcional: Ocultar todas las flechas al llegar
             navigationArrows.forEach(a => a.setEnabled(false));
         }
     });

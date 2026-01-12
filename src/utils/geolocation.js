@@ -1,28 +1,30 @@
 /**
- * Utilidad de localización para PueVen Navigator.
- * Convierte coordenadas y gestiona la posición del usuario. 
+ * Módulo de geolocalización.
+ * Encargado de las conversiones de coordenadas y la gestión de la posición del usuario en el espacio virtual.
  */
 
 import { Vector3 } from "@babylonjs/core";
 
 /**
- * Convierte una posición del mapa a un Vector3 de Babylon.
- * @param {string} gridPos - Coordenada del directorio
- * @returns {Vector3} Posición en el mundo 3D.
+ * Convierte una referencia de cuadrícula alfanumérica en un vector de posición en el espacio 3D.
+ * Realiza el mapeo basado en las coordenadas del mapa (Letras para X, Números para Z).
+ *
+ * @param {string} gridPos - Cadena que representa la coordenada de cuadrícula (ej. "A10").
+ * @returns {Vector3} Objeto Vector3 correspondiente a la posición en el mundo 3D.
  */
 export function conversorToVector3(gridPos) {
-    // Lógica para mapear letras (A-J) y números (7-12) del PDF que utilizamos como base
     const x = gridPos.charCodeAt(0) - 65;
     const z = parseInt(gridPos.substring(1));
 
-    return new Vector3(x * 5, 0, z * 5); // Multiplicador de escala del mapa
+    return new Vector3(x * 5, 0, z * 5);
 }
 
 /**
- * Obtiene la posición actual del usuario mediante los sensores del móvil.
- * Crucial para el cálculo de rutas en tiempo real.
+ * Obtiene la posición actual estimada del usuario.
+ * Esta función sirve como punto de integración para servicios de geolocalización o beacons.
+ *
+ * @returns {Vector3} Vector3 que representa la posición actual del usuario en el origen (0,0,0) por defecto.
  */
 export function userPosition() {
-    // Aquí se integraría con el GPS del dispositivo o beacons
     return new Vector3(0, 0, 0);
 }

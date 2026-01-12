@@ -1,8 +1,8 @@
 import { AdvancedDynamicTexture } from "@babylonjs/gui";
 
 /**
- * Instancia global única de la UI fullscreen.
- * Se crea bajo demanda y se reutiliza en toda la aplicación.
+ * Almacena la instancia única de la interfaz de usuario de pantalla completa.
+ * Se gestiona como un singleton para asegurar una única capa de UI activa.
  * 
  * @type {import("@babylonjs/gui").AdvancedDynamicTexture|null}
  * @private
@@ -10,21 +10,14 @@ import { AdvancedDynamicTexture } from "@babylonjs/gui";
 let globalUI = null;
 
 /**
- * Obtiene o crea la instancia global de `AdvancedDynamicTexture` fullscreen.
+ * Recupera o inicializa la instancia global de `AdvancedDynamicTexture` para la interfaz de usuario.
+ * Implementa el patrón Singleton para garantizar la consistencia en el manejo de la UI.
+ * Si la instancia existente ha sido eliminada o pertenece a una escena diferente, se recrea.
+ * Configura la UI para renderizarse al tamaño ideal, optimizando la visualización en dispositivos móviles.
  * 
- * - Si ya existe y no está eliminada, la devuelve.
- * - Si no existe o fue eliminada, crea una nueva con dimensiones ideales.
- * - Configurada para escalar correctamente en diferentes resoluciones.
+ * @param {import("@babylonjs/core").Scene} scene - La escena de Babylon.js sobre la cual se proyectará la UI.
  * 
- * @param {import("@babylonjs/core").Scene} scene - Escena de Babylon.js donde se renderizará la UI.
- * 
- * @returns {import("@babylonjs/gui").AdvancedDynamicTexture} Instancia activa de la UI global.
- * 
- * @example
- * ```js
- * const ui = getGlobalUI(scene);
- * ui.addControl(myPanel);
- * ```
+ * @returns {import("@babylonjs/gui").AdvancedDynamicTexture} La instancia activa y válida de la UI global.
  */
 export function getGlobalUI(scene) {
   if (globalUI) {
@@ -35,48 +28,32 @@ export function getGlobalUI(scene) {
   }
 
   if (!globalUI) {
-    /**
-     * Crea una UI fullscreen con soporte para escalado automático.
-     * @type {import("@babylonjs/gui").AdvancedDynamicTexture}
-     */
     globalUI = AdvancedDynamicTexture.CreateFullscreenUI("globalUI", true, scene);
-    // Optimización vital para móviles: renderiza a resolución lógica.
     globalUI.renderAtIdealSize = true;
   }
   return globalUI;
 }
 
 /**
- * Limpia todos los controles de la UI global de forma segura.
- * Evita el error 'clearRect' de null deteniendo procesos antes de limpiar.
+ * Elimina todos los controles y limpia el contenido de la UI global de manera segura.
+ * Verifica la existencia de la escena y detiene los observables de renderizado antes de limpiar
+ * para prevenir errores de referencia nula.
  */
 export function clearGlobalUI() {
   if (globalUI && !globalUI.isDisposed) {
-    // Obtenemos la escena vinculada a la UI
     const scene = globalUI.getScene();
 
-    // Detenemos cualquier actualización pendiente antes de limpiar el canvas
     if (scene && !scene.isDisposed) {
       scene.onBeforeRenderObservable.clear();
     }
 
-    // Ejecutamos la limpieza solo si el contexto existe
     globalUI.clear();
   }
 }
 
 /**
- * Elimina completamente la UI global y libera recursos.
- * 
- * - Llama a `dispose()` en la textura.
- * - Establece `globalUI = null` para forzar recreación en el próximo uso.
- * 
- * @returns {void}
- * 
- * @example
- * ```js
- * disposeGlobalUI(); // Limpieza completa al salir de escena
- * ```
+ * Desecha completamente la instancia de la UI global y libera los recursos asociados.
+ * Restablece la referencia global a null, forzando una nueva creación en la próxima solicitud.
  */
 export function disposeGlobalUI() {
   if (globalUI && !globalUI.isDisposed) {

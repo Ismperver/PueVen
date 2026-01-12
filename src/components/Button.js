@@ -2,7 +2,14 @@ import React from 'react';
 import { TouchableOpacity, Text, StyleSheet } from 'react-native';
 
 /**
- * Botón genérico con estilo neón para la interfaz de React Native.
+ * Componente de botón con estética de neón para la interfaz de usuario.
+ * Diseñado para mantener la coherencia visual con el estilo Cyberpunk de la aplicación.
+ *
+ * @param {Object} props - Propiedades del componente.
+ * @param {string} props.text - Texto a mostrar dentro del botón.
+ * @param {function} props.onPress - Función callback a ejecutar al presionar el botón.
+ * @param {boolean} [props.active=false] - Indica si el botón se encuentra en estado activo/seleccionado.
+ * @returns {JSX.Element} Elemento TouchableOpacity estilizado.
  */
 export const NeonButton = ({ text, onPress, active = false }) => {
     return (

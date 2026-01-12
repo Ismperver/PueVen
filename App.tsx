@@ -9,17 +9,22 @@ import { initSelectorScreen, focusStore, renderStoreTargets, setSelectionCallbac
 import { switchFloor } from './src/modules/selectorScreen/mapView.js';
 import tiendasData from './src/assets/dataSet/tiendas.json';
 
-// Importación de componentes de UI
 import { SearchBar } from './src/modules/selectorScreen/searchBar.js';
 import { StorePanel } from './src/modules/selectorScreen/storePanel.js';
 import { NeonButton } from './src/components/Button.js';
 
-// Importación de la lógica de Realidad Aumentada
 import { startARScreen } from './src/modules/arScreen/arScreen.js';
 
 /**
- * Interfaz de la estructura de datos de una tienda.
+ * Define la estructura de datos de una tienda.
  * @interface Tienda
+ * @property {number} id - Identificador único de la tienda.
+ * @property {string} nombre - Nombre comercial de la tienda.
+ * @property {string} categoria - Categoría a la que pertenece (Moda, Restauración, etc.).
+ * @property {number} planta - Número de planta donde se ubica (0 o 1).
+ * @property {string} coordenadas - Coordenadas de ubicación en el mapa.
+ * @property {string} descripcion - Descripción detallada de la tienda.
+ * @property {string} logo - Ruta o nombre del archivo del logotipo.
  */
 interface Tienda {
   id: number;
@@ -32,10 +37,11 @@ interface Tienda {
 }
 
 /**
- * Componente principal de la aplicación.
- * Gestiona la sincronización entre el estado de React y la escena de Babylon,
- * controlando la transición entre el modo mapa y el guiado AR.
- * @returns {JSX.Element}
+ * Componente raíz de la aplicación.
+ * Gestiona el ciclo de vida de la escena de Babylon, la sincronización entre el estado de React y el motor 3D,
+ * y orquesta la transición entre la vista de selección (mapa) y la vista de Realidad Aumentada.
+ *
+ * @returns {JSX.Element} Elemento JSX que contiene la vista del motor 3D y la capa de interfaz de usuario.
  */
 const App = () => {
   const { scene, camera } = usePlaygroundScene() as { scene: Scene; camera: Camera };
@@ -50,39 +56,36 @@ const App = () => {
   const [showUI, setShowUI] = useState(false);
   const [selectedStore, setSelectedStore] = useState<Tienda | null>(null);
 
-  /** * Estado para controlar la visibilidad de la interfaz de usuario de React 
-   * durante la sesión de Realidad Aumentada.
+  /** 
+   * Controla la visibilidad de la interfaz de usuario de React durante la sesión de Realidad Aumentada.
    */
   const [isARActive, setIsARActive] = useState(false);
 
   /**
-   * Extrae las categorías únicas del JSON para el filtro de la SearchBar.
+   * Obtiene un arreglo de categorías únicas derivadas del conjunto de datos de tiendas.
    */
   const categories = Array.from(new Set(tiendasData.tiendas.map(t => t.categoria)));
 
   /**
-   * Inicialización de la escena una vez que el motor está listo.
-   * Configura el selector inicial y activa la visibilidad de la UI tras el splash.
+   * Inicializa la lógica del selector una vez que la escena de Babylon está lista.
+   * Configura el callback de selección y habilita la visibilidad de la interfaz tras un tiempo de espera inicial.
    */
   useEffect(() => {
     if (scene) {
-      console.log("App: Scene ready, initializing selector...");
       setSelectionCallback((store: Tienda) => setSelectedStore(store));
       initSelectorScreen(scene);
       const timer = setTimeout(() => {
-        console.log("App: Setting showUI to true");
         setShowUI(true);
       }, 2000);
       return () => clearTimeout(timer);
-    } else {
-      console.log("App: Waiting for scene...");
     }
   }, [scene]);
 
   /**
-   * Filtra las tiendas basándose en el término de búsqueda y la categoría seleccionada.
-   * @param {string} text - Texto de entrada del buscador.
-   * @param {string} category - Categoría seleccionada para filtrar los resultados.
+   * Actualiza los resultados de búsqueda en función del texto ingresado y la categoría seleccionada.
+   *
+   * @param {string} text - Texto a buscar en los nombres de las tiendas.
+   * @param {string} [category=selectedCategory] - Categoría para filtrar los resultados.
    */
   const handleSearch = (text: string, category: string = selectedCategory) => {
     setSearchTerm(text);
@@ -100,8 +103,10 @@ const App = () => {
   };
 
   /**
-   * Cambia el nivel del mapa y actualiza los marcadores visibles en la escena 3D.
-   * @param {number} floor - Planta seleccionada (0 para Planta Baja, 1 para Primera).
+   * Gestiona el cambio de planta visualizada en el mapa 3D.
+   * Actualiza el estado local y solicita a la escena que renderice los marcadores correspondientes a la nueva planta.
+   *
+   * @param {number} floor - Índice de la planta a visualizar (0 para baja, 1 para primera).
    */
   const handleFloorChange = (floor: number) => {
     if (scene && typeof scene.getMeshByName === 'function') {
@@ -113,9 +118,11 @@ const App = () => {
   };
 
   /**
-   * Activa la sesión de Realidad Aumentada para la tienda seleccionada.
-   * Oculta la UI de React para permitir la visualización inmersiva.
-   * @param {Tienda} store - Objeto de la tienda destino.
+   * Inicia la experiencia de Realidad Aumentada dirigida a una tienda específica.
+   * Oculta la interfaz de usuario superpuesta y delega el control al módulo de AR.
+   * Al finalizar la sesión AR, restaura el estado de la aplicación.
+   *
+   * @param {Tienda} store - Tienda objetivo para la navegación en AR.
    */
   const handleStartAR = async (store: Tienda) => {
     if (scene) {
@@ -133,18 +140,15 @@ const App = () => {
     <View style={styles.root}>
       <StatusBar barStyle="light-content" translucent backgroundColor="transparent" />
 
-      {/* CAPA 1: Motor 3D y Cámara AR */}
       <EngineView
         camera={camera}
         displayFrameRate={false}
-        isTransparent={true} // Obligatorio para ver la cámara en AR
+        isTransparent={true}
         androidView="SurfaceViewZMediaOverlay"
         style={styles.engineView}
       />
 
-      {/* CAPA 2: Interfaz de Usuario (Overlay) */}
       <View style={styles.uiOverlay} pointerEvents="box-none">
-        {/* Mostramos la búsqueda y botones solo si NO estamos en AR para limpiar la visión */}
         {showUI && !isARActive && (
           <>
             <SearchBar
@@ -191,7 +195,7 @@ const App = () => {
 };
 
 /**
- * Estilos para los contenedores de la interfaz nativa.
+ * Define los estilos de los componentes nativos de la interfaz.
  */
 const styles = StyleSheet.create({
   root: {
@@ -200,12 +204,12 @@ const styles = StyleSheet.create({
   },
   engineView: {
     ...StyleSheet.absoluteFillObject,
-    zIndex: 1, // El motor siempre al fondo
+    zIndex: 1,
   },
   uiOverlay: {
     ...StyleSheet.absoluteFillObject,
-    zIndex: 10, // La UI siempre encima del motor
-    elevation: 10, // Android Fix: Elevar la capa sobre vistas nativas
+    zIndex: 10,
+    elevation: 10,
   },
   floorButtonsContainer: {
     position: 'absolute',

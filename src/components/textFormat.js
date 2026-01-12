@@ -1,43 +1,48 @@
+/**
+ * Módulo de formato de texto.
+ * Proporciona funciones para escalar y estandarizar el tamaño del texto en la interfaz gráfica.
+ * Se utiliza el escalado de transformación (scaleX/scaleY) como workaround para optimizar
+ * la renderización de texto en Babylon Native en dispositivos móviles.
+ */
 
 /**
- * Aplica escala adicional al título en dispositivos móviles estando
- * totalmente modularizado para poder cambiar los tamaños e un mismo
- * lugar.
- * 
- * @param {TextBlock} title - Instancia de TextBlock (Babylon GUI)
- * @author Ismael Pérez
- * 
- * @description
- * Usa scaleX/scaleY en lugar de aumentar fontSize ya que
- * en Babylon Native existe un bug para el texto y es la única forma
- * de poder gestionar el tamaño de las fuentes, para:
- * 
- * - Evitar redibujado pesado en Babylon Native
- * - Mantener legibilidad en pantallas
- * - Control fino sobre el tamaño percibido
+ * Aplica una transformación de escala para textos de tipo Título.
+ * Aumenta significativamente el tamaño visual sin alterar el fontSize base.
+ *
+ * @param {TextBlock} text - Instancia del control TextBlock a modificar.
  */
 export function titleText(text) {
     text.scaleX = 10;
     text.scaleY = 10;
 }
 
-// Función que aplica escala para los subtitulos.
+/**
+ * Aplica una transformación de escala para textos de tipo Subtítulo.
+ *
+ * @param {TextBlock} text - Instancia del control TextBlock a modificar.
+ */
 export function subtitleText(text) {
     text.scaleX = 5;
     text.scaleY = 5;
 }
 
-// Función que aplica escala para los textos normales
-// pero un poco más grandes.
+/**
+ * Aplica una transformación de escala para textos de cuerpo resaltado (grande).
+ *
+ * @param {TextBlock} text - Instancia del control TextBlock a modificar.
+ */
 export function bigNormalText(text) {
     text.scaleX = 3;
     text.scaleY = 3;
 }
 
-// Función que aplica la escala para los textos ya que en 1
-// en pantallas de dispositivos móviles se ve pequeño.
+/**
+ * Aplica una transformación de escala para textos de cuerpo normal.
+ * Asegura la legibilidad mínima en pantallas de alta densidad de píxeles.
+ *
+ * @param {TextBlock} text - Instancia del control TextBlock a modificar.
+ */
 export function normalText(text) {
     text.scaleX = 1.5;
     text.scaleY = 1.5;
 }
-

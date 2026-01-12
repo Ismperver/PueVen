@@ -1,54 +1,45 @@
 import { Scene } from "@babylonjs/core";
 import { Rectangle, Image, Control, TextBlock } from "@babylonjs/gui";
-import { getGlobalUI, clearGlobalUI } from "../../utils/uiManager.js";
+import { getGlobalUI } from "../../utils/uiManager.js";
 import { bigNormalText, normalText } from "../../components/textFormat.js";
 import logoAsset from "../../assets/Pueven_logo.png";
 import { Image as RNImage } from "react-native";
 import { createMapCamera } from "../../components/Camera.js";
+
 /**
- * Variable local para guardar el contenedor de la pantalla de carga.
+ * Almacena la referencia al contenedor de la interfaz de carga.
  * @type {Rectangle|null}
  * @private
  */
 let loadingContainer = null;
 
 /**
- * Crea la escena inicial de Babylon.js y activa la interfaz de carga.
- * Esta función es el punto de entrada principal que invoca el motor de Babylon.js
- * al arrancar la aplicación en el dispositivo móvil.
+ * Inicializa la escena de Babylon.js y despliega la interfaz de carga inicial.
+ * Configura la cámara óptima para navegación en mapas y ejecuta el renderizado de la pantalla de bienvenida.
  *
- * @param {import("@babylonjs/core").Engine} engine - El motor de renderizado de Babylon.
- * @returns {Scene} La escena de carga inicial.
+ * @param {import("@babylonjs/core").Engine} engine - Instancia del motor de renderizado de Babylon.
+ * @returns {Scene} La escena configurada y lista con load screen activo.
  */
 export function createScene(engine) {
     const scene = new Scene(engine);
-
-    // FIX: Usamos la cámara optimizada para Mapas (ArcRotate)
-    // Esto habilita zoom rápido, panning suave y mejor control táctil.
     const camera = createMapCamera(scene);
-
-    // Ejecuta la pantalla de carga
     showLoadScreen(scene);
-
     return scene;
 }
 
 /**
- * Crea y muestra la pantalla de carga con el logo y el mensaje de bienvenida.
- * Esta función prepara la primera impresión del usuario, configurando el fondo,
- * el logo del centro comercial y los textos.
+ * Genera y muestra los elementos gráficos de la pantalla de carga (Splash Screen).
+ * Configura el fondo, logotipo y textos de estado utilizando la UI global.
+ * Se asegura de limpiar cualquier instancia previa para evitar conflictos visuales.
  *
- * @param {import("@babylonjs/core").Scene} scene - La escena donde se creará la interfaz.
- * @returns {void}
+ * @param {import("@babylonjs/core").Scene} scene - Escena sobre la cual se proyecta la interfaz.
  */
 export function showLoadScreen(scene) {
     const ui = getGlobalUI(scene);
 
-    // Asegurar limpieza de cualquier instancia previa para evitar superposiciones.
     if (loadingContainer) {
         disposeLoadScreen();
     }
-
 
     // Contenedor principal que ocupa toda la pantalla
     loadingContainer = new Rectangle("loadingContainer");
@@ -58,16 +49,13 @@ export function showLoadScreen(scene) {
     loadingContainer.background = "#0A0A0A";
     ui.addControl(loadingContainer);
 
-    // Panel Central del Logo
-    // Usamos un panel contenedor para el logo para poder escalarlo eficientemente
-    // sin afectar a la calidad de la imagen o causar redibujados.
+    // Panel contenedor del logo para gestión de escala eficiente
     const logoPanel = new Rectangle("logoPanel");
     logoPanel.width = "400px";
     logoPanel.height = "400px";
     logoPanel.thickness = 0;
     logoPanel.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_CENTER;
     logoPanel.verticalAlignment = Control.VERTICAL_ALIGNMENT_CENTER;
-    // Iniciamos con escala 0 para animar o simplemente mantener el control
     logoPanel.scaleX = 0.8;
     logoPanel.scaleY = 0.8;
     loadingContainer.addControl(logoPanel);
@@ -86,28 +74,24 @@ export function showLoadScreen(scene) {
     welcomeText.verticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
     welcomeText.top = "15%";
 
-    // Aplicación de escala estándar del texto.
     bigNormalText(welcomeText);
     loadingContainer.addControl(welcomeText);
 
-    // Texto de estado.
+    // Texto de estado
     const statusText = new TextBlock("statusText", "CARGANDO...");
     statusText.color = "#BC00FF";
     statusText.verticalAlignment = Control.VERTICAL_ALIGNMENT_BOTTOM;
     statusText.top = "-15%";
 
-    // Aplicación de escala estándar del texto.
     normalText(statusText);
     loadingContainer.addControl(statusText);
-
-    console.log("Pantalla de carga refactorizada mostrada...");
 }
 
 /**
- * Simula el progreso de carga o muestra un mensaje específico de sistema.
- * Útil para dar feedback al usuario.
+ * Actualiza el mensaje de estado mostrado en la pantalla de carga.
+ * Permite proporcionar retroalimentación visual al usuario sobre el progreso del sistema.
  *
- * @param {string} message - El mensaje que se quiere mostrar.
+ * @param {string} message - Cadena de texto con el nuevo estado a visualizar.
  */
 export function updateLoadStatus(message) {
     if (loadingContainer) {
@@ -119,15 +103,13 @@ export function updateLoadStatus(message) {
 }
 
 /**
- * Elimina la pantalla de carga para dar paso a la aplicación principal.
- * Es vital llamar a esta función cuando el mapa o la escena AR estén listos
- * para liberar memoria.
+ * Desmonta y elimina los recursos de la pantalla de carga.
+ * Se debe invocar una vez que la carga de assets y lógica principal ha finalizado.
  */
 export function disposeLoadScreen() {
     if (loadingContainer) {
         loadingContainer.isVisible = false;
         loadingContainer.dispose();
         loadingContainer = null;
-        console.log("Pantalla de carga eliminada.");
     }
 }

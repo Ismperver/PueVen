@@ -2,7 +2,12 @@ import { MeshBuilder, StandardMaterial, Color3, Vector3, Mesh } from "@babylonjs
 import { getCoordinates } from "../selectorScreen/mapView.js";
 
 /**
- * Crea una flecha 3D compuesta (Palo + Punta).
+ * Genera una malla compuesta que representa una flecha tridimensional.
+ * Combina un cilindro para el eje y otro para la punta, fusionándolos en un solo mesh para optimizar el rendimiento.
+ *
+ * @param {import("@babylonjs/core").Scene} scene - La escena activa donde se creará la flecha.
+ * @param {string} name - Identificador único para el nuevo mesh.
+ * @returns {import("@babylonjs/core").Mesh} La flecha 3D creada y materializada.
  */
 export function createArrowMesh(scene, name) {
     const shaft = MeshBuilder.CreateCylinder("shaft", {
@@ -31,25 +36,29 @@ export function createArrowMesh(scene, name) {
 }
 
 /**
- * Genera TODAS las flechas desde el origen (0,0,0) hasta el destino.
- * Se llama una sola vez al iniciar AR para evitar parpadeos.
+ * Instancia y distribuye una colección de flechas a lo largo de la trayectoria desde el origen hasta el destino.
+ * Calcula el vector dirección y posiciona marcadores equidistantes para formar el camino visual.
+ *
+ * @param {import("@babylonjs/core").Scene} scene - La escena activa.
+ * @param {Object} store - Datos de la tienda destino, incluyendo coordenadas y planta.
+ * @returns {Array<import("@babylonjs/core").Mesh>} Arreglo con todas las mallas de flechas generadas.
  */
 export function setupPath(scene, store) {
     const destPos = getCoordinates(store.coordenadas, store.planta);
     const arrows = [];
 
-    // Origen relativo sesión AR
+    // Origen relativo inicial de la sesión AR
     const startPos = Vector3.Zero();
     const direction = destPos.subtract(startPos).normalize();
     const totalDistance = Vector3.Distance(startPos, destPos);
 
-    // Flechas cada 2 metros
+    // Intervalo de distancia entre flechas consecutivas
     const stepSize = 2.0;
 
-    // Creamos flechas cubriendo todo el camino
     for (let dist = 2.0; dist < totalDistance; dist += stepSize) {
         const pos = startPos.add(direction.scale(dist));
-        pos.y = -1.8; // Pegadas al suelo
+        // Ajuste vertical para situarlas al nivel del suelo
+        pos.y = -1.8;
 
         const arrow = createArrowMesh(scene, `arrow_${dist}`);
         arrow.position = pos;
@@ -61,22 +70,22 @@ export function setupPath(scene, store) {
 }
 
 /**
- * Gestiona la visibilidad de las flechas para simular avance.
- * Oculta las flechas que han quedado detrás del usuario.
+ * Actualiza la visibilidad de los indicadores de camino en función del progreso del usuario.
+ * Oculta dinámicamente las flechas que el usuario ya ha sobrepasado para limpiar la interfaz visual.
+ *
+ * @param {Array<import("@babylonjs/core").Mesh>} arrows - Conjunto de flechas de navegación activas.
+ * @param {import("@babylonjs/core").Vector3} userPos - Posición actual de la cámara AR del usuario.
+ * @param {import("@babylonjs/core").Vector3} targetPos - Posición objetivo (meta).
  */
 export function updatePathVisibility(arrows, userPos, targetPos) {
     if (!arrows) return;
 
-    // Distancia del usuario al objetivo
     const distUserToTarget = Vector3.Distance(userPos, targetPos);
 
     arrows.forEach(arrow => {
-        // Distancia de la flecha al objetivo
         const distArrowToTarget = Vector3.Distance(arrow.position, targetPos);
 
-        // Si la flecha está más lejos del objetivo que el usuario (+ un margen de 2m),
-        // significa que el usuario ya la pasó. La ocultamos.
-        // Si la flecha está delante (distancia menor al target), la mostramos.
+        // Ocultar flecha si está más lejos del objetivo que el usuario (con margen de tolerancia)
         if (distArrowToTarget > (distUserToTarget + 1.0)) {
             arrow.setEnabled(false);
         } else {
@@ -85,6 +94,14 @@ export function updatePathVisibility(arrows, userPos, targetPos) {
     });
 }
 
+/**
+ * Crea un marcador visual prominente en la ubicación de destino.
+ * Utiliza un cono invertido con colores emisivos para indicar claramente la meta.
+ *
+ * @param {import("@babylonjs/core").Scene} scene - Escena activa.
+ * @param {import("@babylonjs/core").Vector3} position - Coordenadas 3D donde se ubicará el marcador.
+ * @returns {import("@babylonjs/core").Mesh} El mesh del marcador creado.
+ */
 export function createTargetMarker(scene, position) {
     const targetPos = position.clone();
     targetPos.y = 1.5;

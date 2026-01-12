@@ -2,18 +2,17 @@ import { Rectangle, Control } from "@babylonjs/gui";
 import { getGlobalUI } from "../utils/uiManager.js";
 
 /**
- * Crea un nuevo panel rectangular para la interfaz de usuario.
- * 
- * Esta función se encarga de configurar todos los estilos básicos (color, tamaño, bordes)
- * y añadirlo automáticamente a la pantalla principal de la escena.
+ * Genera un panel rectangular estilizado para la interfaz de usuario.
+ * Configura las propiedades visuales (color, bordes, curvatura) y dimensiones del panel,
+ * adoptando una estética de neón consistente con la aplicación.
  *
- * @param {Scene} scene - La escena del juego donde se dibujará el panel.
- * @param {Object} options - Opciones para personalizar el panel (ancho, alto, nombre...).
- * @param {string} [options.name="infoPanel"] - Nombre interno para identificar este panel.
- * @param {string|number} [options.width="300px"] - Cuánto mide de ancho.
- * @param {string|number} [options.height="200px"] - Cuánto mide de alto.
- * @param {number} [options.verticalAlignment] - Dónde se pega verticalmente el panel (Arriba, Abajo, Centro).
- * @returns {Rectangle} Devuelve el panel creado para que se pueda añadir cosas después.
+ * @param {Scene} scene - Escena activa donde se renderizará el panel a través de la UI global.
+ * @param {Object} options - Objeto de configuración para personalizar el panel.
+ * @param {string} [options.name="infoPanel"] - Identificador único del panel.
+ * @param {string|number} [options.width="300px"] - Ancho del panel.
+ * @param {string|number} [options.height="200px"] - Alto del panel.
+ * @param {number} [options.verticalAlignment] - Alineación vertical del panel en la pantalla.
+ * @returns {Rectangle} Instancia del control Rectangle creado.
  */
 export function createPanel(scene, options = {}) {
     const {
@@ -44,10 +43,10 @@ export function createPanel(scene, options = {}) {
 }
 
 /**
- * Añade un elemento (como un botón, texto o imagen) dentro de un panel existente.
+ * Incorpora un control hijo (botón, texto, imagen, etc.) dentro de un panel contenedor.
  *
- * @param {Rectangle} panel - El panel donde quieres meter el elemento.
- * @param {Control} control - El elemento visual que quieres añadir.
+ * @param {Rectangle} panel - Panel contenedor donde se agregará el control.
+ * @param {Control} control - Elemento de interfaz a añadir.
  */
 export function addControlPanel(panel, control) {
     if (panel && control) {
@@ -56,11 +55,10 @@ export function addControlPanel(panel, control) {
 }
 
 /**
- * Elimina el panel de la memoria y lo quita de la pantalla.
- * Es IMPORTANTE llamar a esta función cuando ya no se necesite el panel
- * para evitar que la aplicación se vuelva lenta.
- * 
- * @param {Rectangle} panel - El panel que se quiera destruir.
+ * Elimina el panel y libera los recursos asociados.
+ * Se debe invocar esta función cuando el panel ya no sea necesario para optimizar el rendimiento.
+ *
+ * @param {Rectangle} panel - Panel a eliminar.
  */
 export function disposePanel(panel) {
     if (panel) {

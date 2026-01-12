@@ -2,16 +2,16 @@ import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 
 /**
- * Panel informativo nativo que muestra los detalles de la tienda seleccionada.
- * Este componente sustituye a la interfaz de Babylon GUI para asegurar fluidez y evitar problemas de teclado.
- * * @param {Object} props - Propiedades del componente.
- * @param {Object|null} props.store - Objeto con los datos de la tienda seleccionada.
- * @param {Function} props.onClose - Función para cerrar el panel y limpiar la selección.
- * @param {Function} props.onStartAR - Función para iniciar la cámara de Realidad Aumentada.
- * @returns {JSX.Element|null} El componente renderizado o null si no hay selección.
+ * Componente funcional que renderiza un panel informativo nativo con los detalles de la tienda seleccionada.
+ * Se superpone a la vista 3D para evitar problemas de interacción comunes en interfaces puramente canvas (Babylon GUI) y mejorar la accesibilidad.
+ *
+ * @param {Object} props - Objeto de propiedades del componente.
+ * @param {Object|null} props.store - Objeto de datos de la tienda seleccionada. Si es null, el componente no se renderiza.
+ * @param {Function} props.onClose - Función callback para cerrar el panel y limpiar la selección actual.
+ * @param {Function} props.onStartAR - Función callback que inicia el modo de Realidad Aumentada con la tienda seleccionada como objetivo.
+ * @returns {JSX.Element|null} El elemento React del panel o null si no hay tienda activa.
  */
 export const StorePanel = ({ store, onClose, onStartAR }) => {
-    // Si no hay ninguna tienda seleccionada, el componente no se renderiza.
     if (!store) return null;
 
     return (
@@ -44,7 +44,7 @@ export const StorePanel = ({ store, onClose, onStartAR }) => {
 };
 
 /**
- * Estilos del panel de información con temática neón y colores corporativos de la App.
+ * Define los estilos visuales del panel, implementando una paleta de colores neón y sombras para destacar sobre la escena 3D.
  */
 const styles = StyleSheet.create({
     infoPanel: {

@@ -1,19 +1,20 @@
 /**
- * Componente Target en el cual se desarrolla la lógica para los
- * marcadores que se utilizarán en el mapa y en el modo AR para 
- * indicar el lugar de una tienda, siendo interactivos.
- * @author Ismael Pérez
+ * Módulo de generación de marcadores (Targets).
+ * Crea elementos 3D interactivos que señalan la ubicación de las tiendas en el entorno virtual o AR.
  */
 
 import { MeshBuilder, StandardMaterial, Color3, Vector3 } from "@babylonjs/core";
 
 /**
- * @param {import("@babylonjs/core").Scene} scene - Escena de Babylon.
- * @param {Object} options - Configuración del marcador.
- * @param {string} [options.name="targetStore"] - Nombre del marcador.
- * @param {Vector3} [options.position] - Posición inicial.
- * @param {string} [options.color="#00E5FF"] - Color neón.
- * * @returns {import("@babylonjs/core").Mesh} El marcador creado.
+ * Crea e instancia un marcador visual en la escena.
+ * El marcador consiste en un cono invertido animado con un material de estilo neón.
+ *
+ * @param {import("@babylonjs/core").Scene} scene - Escena donde se renderizará el marcador.
+ * @param {Object} options - Configuración de propiedades del marcador.
+ * @param {string} [options.name="targetStore"] - Identificador del mesh.
+ * @param {Vector3} [options.position] - Posición inicial en el espacio 3D.
+ * @param {string} [options.color="#00E5FF"] - Color del material en formato hexadecimal.
+ * @returns {import("@babylonjs/core").Mesh} La malla 3D (Mesh) del marcador creado.
  */
 export function createTarget(scene, options = {}) {
     const {
@@ -22,7 +23,6 @@ export function createTarget(scene, options = {}) {
         color = "#00E5FF"
     } = options;
 
-    // Creamos un cono invertido.
     const target = MeshBuilder.CreateCylinder(name, {
         diameterTop: 0.5,
         diameterBottom: 0,
@@ -32,17 +32,16 @@ export function createTarget(scene, options = {}) {
 
     target.position = position;
 
-    // Material con estilo Neón.
     const material = new StandardMaterial(`${name}Mat`, scene);
     const neonColor = Color3.FromHexString(color);
-    
+
     material.diffuseColor = neonColor;
-    material.emissiveColor = neonColor; // Hace que brille incluso en zonas oscuras
-    material.alpha = 0.8; // Transparencia
-    
+    material.emissiveColor = neonColor;
+    material.alpha = 0.8;
+
     target.material = material;
 
-    // Animación simple de levitación sobre el terreno.
+    // Configura una animación de levitación y rotación continua
     let alpha = 0;
     scene.onBeforeRenderObservable.add(() => {
         alpha += 0.05;
@@ -54,8 +53,9 @@ export function createTarget(scene, options = {}) {
 }
 
 /**
- * Elimina el marcador de la escena y libera sus recursos.
- * * @param {import("@babylonjs/core").Mesh} target - La malla del marcador a eliminar.
+ * Elimina el marcador de la escena y libera los recursos gráficos asociados (malla y material).
+ *
+ * @param {import("@babylonjs/core").Mesh} target - Objeto Mesh del marcador a eliminar.
  */
 export function disposeTarget(target) {
     if (target) {
