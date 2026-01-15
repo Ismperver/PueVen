@@ -22,9 +22,7 @@ module.exports = {
       {
         text: 'API Reference',
         items: [
-          { text: 'Modules', link: '/api/modules' },
-          { text: 'Classes', link: '/api/classes' },
-          { text: 'Functions', link: '/api/functions' }
+          { text: 'Modules', link: '/api/modules' }
         ]
       }
     ]
